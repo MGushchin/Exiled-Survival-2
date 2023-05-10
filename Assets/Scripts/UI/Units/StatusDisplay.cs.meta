@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 4345b3d07576aba44ac132cb9b0e9f51
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - IconPrefab: {instanceID: 0}
+  - PoisonImage: {fileID: 21300000, guid: 2531e15fe967a354d9d28c9cfc1d71ca, type: 3}
+  - DivineAuraImage: {fileID: 21300000, guid: 4637953d65a24364aab3372a525b9ed2, type: 3}
+  - DefaultImage: {fileID: 21300000, guid: c5ad166747d7f6f4a9fc2db2c39f781c, type: 3}
+  - BleedingImage: {fileID: 21300000, guid: c1d35b40e3fb0f9438f23087432d9765, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

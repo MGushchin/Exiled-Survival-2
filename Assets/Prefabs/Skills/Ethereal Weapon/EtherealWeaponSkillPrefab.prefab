@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3888150775097093087
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4401649318719052757}
+  - component: {fileID: 8405881328590914339}
+  - component: {fileID: 2740144360533761775}
+  m_Layer: 0
+  m_Name: EtherealWeaponSkillPrefab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4401649318719052757
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3888150775097093087}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8405881328590914339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3888150775097093087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d70deb429ce3c42a4a196686e550cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Ethereal Weapon
+  skillIcon: {fileID: 21300000, guid: 6c0c21027f052744fa140014df7c567d, type: 3}
+  SelfTransform: {fileID: 4401649318719052757}
+  activeSkill: 1
+  ProjectilePrefab: {fileID: 7554299668066848804, guid: 4b4a1513388ca5a448906c6d466a232f, type: 3}
+--- !u!114 &2740144360533761775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3888150775097093087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff1f380ea17f3e44cb372b344653aae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpgradeableSkill: {fileID: 8405881328590914339}
+  upgrades:
+  - {fileID: 11400000, guid: 8d0c60ff00f94dd42a68caf6d5c128d2, type: 2}
+  - {fileID: 11400000, guid: e68680a0f66c7db48aea522405fbb55c, type: 2}
+  - {fileID: 11400000, guid: 205ad4869b3fe284ab0039bffcb69f7a, type: 2}
+  lockedUpgrades: []
