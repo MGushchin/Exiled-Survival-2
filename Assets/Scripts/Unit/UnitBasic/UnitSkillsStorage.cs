@@ -61,7 +61,7 @@ public class UnitSkillsStorage : MonoBehaviour
             storage[mod.ParentSkill].Add(mod);
         }
         else
-            Debug.Log("Skill storage не содерижить ключ родительского навыка");
+            Debug.LogWarning("Skill storage не содерижить ключ родительского навыка");
     }
 
     public void ChangeActiveSkillsSlots(int skill1, int skill2)

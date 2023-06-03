@@ -21,14 +21,13 @@ public class LevelSetup : MonoBehaviour
     public GameObject DungeonPrefab;
     public NavMeshSurface Navigation;
     public EnemyFactory Spawner;
+    public LocationLevelProgression Progression;
     private SurvivalScenario scenario;
     private ILevelSetup currentLevel;
 
     public void SetupLevel()
     {
-        CreateTerrain(Areas.Dungeon, new Vector2(25, 25));
-        //AddScenario(Scenario.Survival);
-        //StartScenario();
+        CreateTerrain(Areas.Dungeon, new Vector2(50, 50));
     }
 
     public void CreateTerrain(Areas areaType, Vector2 size)
@@ -49,33 +48,11 @@ public class LevelSetup : MonoBehaviour
         }
         currentLevel.InitSetup(WalkableTilemap, BlockingTilemap);
         currentLevel.selfObject.transform.position = new Vector3(-size.x / 2, -size.y / 2, 0);
-        GlobalData.instance.LevelData.Map = currentLevel.Setup((int)size.x, 1);
+        //GlobalData.instance.LevelData.Map = currentLevel.Setup((int)size.x, 1);
+        //GlobalData.instance.LevelData.Map = currentLevel.SetupRandomly((int)size.x, (int)size.y);
+        GlobalData.instance.LevelData.Map = currentLevel.Setup((int)size.x, (int)size.y);
         Navigation.BuildNavMesh();
+        Progression.SetTimerSetting(1, 60);
+        Progression.StartTimer();
     }
-
-    //public void AddScenario(Scenario scenarioType)
-    //{
-    //    switch (scenarioType)
-    //    {
-    //        case (Scenario.Survival):
-    //            {
-    //                scenario = scenario = gameObject.AddComponent<SurvivalScenario>();
-    //            }
-    //            break;
-    //        default:
-    //            {
-    //                scenario = scenario = gameObject.AddComponent<SurvivalScenario>();
-    //                Debug.LogWarning("Default exception");
-    //            }
-    //            break;
-    //    }
-    //    scenario.InitScenario(GlobalData.instance.LevelData.Map, Spawner, GlobalData.instance.PlayerData.Player.transform);
-    //}
-
-    //public void StartScenario()
-    //{
-    //    GlobalData.instance.LevelData.CreateNewLevelData(1);
-    //    scenario.StartScenario(1);
-    //}
-
 }

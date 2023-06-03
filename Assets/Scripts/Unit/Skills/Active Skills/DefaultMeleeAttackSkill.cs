@@ -13,11 +13,12 @@ public class DefaultMeleeAttackSkill : Skill
     //Skill params
     //private float skillCooldown = 1;
     private float baseSkillCooldown = 1;
-    private float attackRange = 1;
     private float baseCriticalStrikeChance = 5;
+
     #region UtilityLinks
     private float resultCooldownRecoverySpeed => (1 / owner.Stats.GetAdvancedStat(StatTag.CooldownRecovery).Value);
     private float resultSkillCooldown => baseSkillCooldown * (1 / (owner.Stats.GetAdvancedStat(StatTag.CooldownRecovery).Value)); // Добавить модификатор скорости атаки
+    private float attackRange => owner.Stats.GetStat(StatTag.AttackRange);
     #endregion
 
     public override void InitSKill(UnitActions skillOwner)

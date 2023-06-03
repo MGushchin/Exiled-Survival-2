@@ -47,6 +47,18 @@ public class EnemySpawn : MonoBehaviour
         enemy.GetComponent<CommonEnemyBehaviour>().SetActive(true); //переписать
     }
 
+    public UnitActions SpawnBossAroundPlayer()
+    {
+        UnitActions boss;
+        boss = factory.CreateBossEnemy();
+        boss.gameObject.SetActive(true);
+        boss.transform.position = getSpawnPosition();
+        UnitPool.instance.AddToPool(boss, boss.Stats.Ally);
+        boss.Ressurect();
+        boss.GetComponent<CommonEnemyBehaviour>().SetActive(true); //переписать
+        return boss;
+    }
+
     private Vector3 getSpawnPosition()
     {
         float x, y;

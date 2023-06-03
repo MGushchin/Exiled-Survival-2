@@ -109,7 +109,8 @@ public class Cleave : Skill
         for (int i = 0; i < hits.Count; i++)
         {
             //Setup transform data
-            hits[i].hit.SelfTransform.position = selfTransform.position + Vector3.Normalize(castPoint - transform.position) + offset;
+            Vector3 modifiedcastPoint = Vector3.ClampMagnitude(Vector3.Normalize(castPoint - transform.position), attackRange);
+            hits[i].hit.SelfTransform.position = selfTransform.position + (Vector3.Normalize(castPoint - transform.position)) + offset;
             hits[i].hit.SelfTransform.rotation = Quaternion.Euler(selfTransform.rotation.eulerAngles.x, selfTransform.rotation.eulerAngles.y, (Mathf.Atan2(castPoint.y - selfTransform.position.y, castPoint.x - selfTransform.position.x) * Mathf.Rad2Deg/* - 90*/)); //Переписать
             offset = new Vector3(Random.Range(-offsetMagnitude, offsetMagnitude), Random.Range(-offsetMagnitude, offsetMagnitude), 0);
             //Set Hits

@@ -6,22 +6,10 @@ using UnityEngine;
 public class EnemyFactory : MonoBehaviour
 {
     public List<GameObject> Prefabs = new List<GameObject>();
-    //public int PoolSize = 10;
-    //private List<UnitActions> reserveUnits = new List<UnitActions>();
-    //private List<UnitActions> activeUnits = new List<UnitActions>();
     private List<AbstractFactory> factories = new List<AbstractFactory>();
 
     public void CreatePool()
     {
-        //for (int i = 0; i < PoolSize; i++)
-        //{
-        //    GameObject unit = Instantiate(Prefab);
-        //    UnitActions action = unit.GetComponent<UnitActions>();
-        //    action.InitUnit();
-        //    action.OnDeath.AddListener(ReturnToPool);
-        //    reserveUnits.Add(action);
-        //    unit.SetActive(false);
-        //}
         for(int i=0; i < Prefabs.Count; i++)
         {
             AbstractFactory factory = gameObject.AddComponent(typeof(AbstractFactory)) as AbstractFactory;
@@ -49,6 +37,11 @@ public class EnemyFactory : MonoBehaviour
         return unit;
     }
 
+    public UnitActions CreateBossEnemy()
+    {
+        UnitActions unit = factories[Random.Range(0, factories.Count)].GetBossEnemy();
+        return unit;
+    }
 
     //public void ReturnToPool(UnitActions action)
     //{

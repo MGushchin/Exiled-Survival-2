@@ -26,6 +26,10 @@ public class Skill : MonoBehaviour
 
     protected UnitActions owner;
 
+    #region UtilityLinks
+    protected float attackRange => owner.Stats.GetStat(StatTag.AttackRange);
+    #endregion
+
     public void SetBaseSkillMod(SkillMod mod)
     {
         baseSkillMod = mod;
@@ -59,7 +63,6 @@ public class Skill : MonoBehaviour
 
     public virtual void ApplyUpgrade(string name, int level)
     {
-        Debug.Log("Upgraded " + name);
         baseSkillMod.UpgradeLevel();
     }
 

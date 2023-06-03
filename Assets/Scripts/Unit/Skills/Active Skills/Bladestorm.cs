@@ -17,6 +17,10 @@ public class Bladestorm : Skill
     private Queue<skillHit> hitsPool = new Queue<skillHit>();
     private IEnumerator cooldownCoroutine;
 
+    private bool following = false;
+    private bool blood = false;
+    private bool sand = false;
+
     #region SkillParams
     private CombinedStat damageModifier = new CombinedStat(4, 0, new List<float> { 0.5f }); //50% damage mult
     private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());

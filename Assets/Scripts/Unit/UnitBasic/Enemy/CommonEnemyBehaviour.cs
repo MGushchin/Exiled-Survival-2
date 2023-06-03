@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ public class CommonEnemyBehaviour : MonoBehaviour
     [SerializeField]
     private float updateTime = 1;
     [SerializeField]
-    private float attackRange = 1;
+    private float attackRange => Actions.Stats.GetStat(StatTag.AttackRange);
     private IEnumerator fighting;
     [SerializeField]
     private bool active = false;

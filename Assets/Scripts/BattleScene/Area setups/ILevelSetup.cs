@@ -9,4 +9,6 @@ public interface ILevelSetup
     public void InitSetup(Tilemap walkable, Tilemap blockable);
 
     public MapData Setup(int size, float noise);
+
+    public MapData SetupRandomly(int width, int height);
 }

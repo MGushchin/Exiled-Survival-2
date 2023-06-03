@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class DungeonSetup : MonoBehaviour, ILevelSetup
 {
@@ -11,11 +10,60 @@ public class DungeonSetup : MonoBehaviour, ILevelSetup
     public TileBase BlockableTile;
     private Tilemap walkableTilemap;
     private Tilemap blockingTilemap;
+    private NoiseMapGenerator noiseMapGenerator = new NoiseMapGenerator();
 
     public void InitSetup(Tilemap walkable, Tilemap blockable)
     {
         walkableTilemap = walkable;
         blockingTilemap = blockable;
+    }
+
+    public MapData SetupRandomly(int width, int height)
+    {
+        #region Settings
+        int seed = Random.Range(1, 1001);
+        float scale = 100;
+        int octaves = 4; //Повторение
+        float persistence = 0.5f; //Постоянство
+        float lacunarity = 2; //Контролирует изменение частоты
+        Vector2 offset = new Vector2(0, 0);
+        #endregion
+
+        octaves = 4;
+        persistence = 0.25f;
+        lacunarity = 4;
+
+        float[,] noiseMap = noiseMapGenerator.GenerateNoiseMap(width, height, seed, scale, octaves, persistence, lacunarity, offset);
+
+        Vector2Int start = new Vector2Int((int)transform.position.x, (int)transform.position.y);
+        MapData map = new MapData(width, height, (int)transform.position.x, (int)transform.position.y); //Подправить универсальность
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                Debug.Log(noiseMap[x, y]);
+
+                //if(Mathf.Abs(x) < width / 2 && Mathf.Abs(y) < height / 2)
+                if (x >  0.25f * width && y > 0.25f * height && x <  0.75f * width && y < 0.75f * height)
+                {
+                    walkableTilemap.SetTile(new Vector3Int(x, y), WalkableTile);
+                    map.SetPoint(x, y, true);
+                }
+                else
+                if (noiseMap[x, y] >= 0.5f)
+                {
+                    walkableTilemap.SetTile(new Vector3Int(x, y), WalkableTile);
+                    map.SetPoint(x, y, true);
+                }
+                else
+                {
+                    blockingTilemap.SetTile(new Vector3Int(x, y), BlockableTile);
+                    map.SetPoint(x, y, false);
+                }
+            }
+        }
+        return map;
     }
 
     public MapData Setup(int size, float noise)
@@ -35,9 +83,9 @@ public class DungeonSetup : MonoBehaviour, ILevelSetup
                 }
                 else
                 {
-                    
-                        //blockingTilemap.SetTile(new Vector3Int(x, y), BlockableTile);
-                        //map.SetPoint(x, y, false);
+
+                    //blockingTilemap.SetTile(new Vector3Int(x, y), BlockableTile);
+                    //map.SetPoint(x, y, false);
                 }
             }
         }
@@ -58,7 +106,7 @@ public class DungeonSetup : MonoBehaviour, ILevelSetup
 
             for (int k = start.x; k >= x1 - 10; k--)
             {
-                if(k >= x1)
+                if (k >= x1)
                     walkableTilemap.SetTile(new Vector3Int(k, i), WalkableTile);
                 else
                     blockingTilemap.SetTile(new Vector3Int(k, i), BlockableTile);
@@ -66,7 +114,7 @@ public class DungeonSetup : MonoBehaviour, ILevelSetup
 
             for (int k = start.x + size; k <= x2 + 10; k++)
             {
-                if(k <= x2)
+                if (k <= x2)
                     walkableTilemap.SetTile(new Vector3Int(k, i), WalkableTile);
                 else
                     blockingTilemap.SetTile(new Vector3Int(k, i), BlockableTile);
@@ -74,7 +122,7 @@ public class DungeonSetup : MonoBehaviour, ILevelSetup
 
             for (int k = start.y; k >= y1 - 10; k--)
             {
-                if(k >= y1)
+                if (k >= y1)
                     walkableTilemap.SetTile(new Vector3Int(i, k), WalkableTile);
                 else
                     blockingTilemap.SetTile(new Vector3Int(i, k), BlockableTile);
@@ -82,7 +130,7 @@ public class DungeonSetup : MonoBehaviour, ILevelSetup
 
             for (int k = start.y + size; k <= y2 + 10; k++)
             {
-                if(k <= y2)
+                if (k <= y2)
                     walkableTilemap.SetTile(new Vector3Int(i, k), WalkableTile);
                 else
                     blockingTilemap.SetTile(new Vector3Int(i, k), BlockableTile);
@@ -90,9 +138,9 @@ public class DungeonSetup : MonoBehaviour, ILevelSetup
 
             //Заполнение углов
             //Лево низ
-            for(int x = start.x - 10; x < start.x; x++)
-                for(int y = start.y - 10; y < start.y; y++)
-                blockingTilemap.SetTile(new Vector3Int(x, y), BlockableTile);
+            for (int x = start.x - 10; x < start.x; x++)
+                for (int y = start.y - 10; y < start.y; y++)
+                    blockingTilemap.SetTile(new Vector3Int(x, y), BlockableTile);
             //Право верх
             for (int x = start.x + size + 10; x > start.x + size; x--)
                 for (int y = start.y + size + 10; y > start.y + size; y--)
@@ -106,7 +154,7 @@ public class DungeonSetup : MonoBehaviour, ILevelSetup
                 for (int y = start.y - 10; y < start.y; y++)
                     blockingTilemap.SetTile(new Vector3Int(x, y), BlockableTile);
         }
-            return map;
+        return map;
     }
     private void createVoid(Vector3Int position, int size)
     {
@@ -114,7 +162,7 @@ public class DungeonSetup : MonoBehaviour, ILevelSetup
         {
             walkableTilemap.SetTile(new Vector3Int(position.x, position.y), WalkableTile);
             blockingTilemap.SetTile(new Vector3Int(position.x, position.y), BlockableTile);
-            for(int j=0; j < i; j++)
+            for (int j = 0; j < i; j++)
             {
 
             }

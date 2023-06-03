@@ -52,6 +52,7 @@ public class PlayerSkillsGiver : MonoBehaviour
                 {
                     unavaibleMods.Add(mod);
                 }
+                //Перебор пассивных умений
                 for (int j = 0; j < skillsData[i].SkillMods.Count; j++)
                 {
                     mod = Instantiate(skillsData[i].SkillMods[j]);
@@ -130,25 +131,21 @@ public class PlayerSkillsGiver : MonoBehaviour
         if (allModsByName.ContainsKey(skillModName))
         {
             SkillMod mod = allModsByName[skillModName];
-            //if (mod.Level < mod.MaximumLevel)
-            //    mod.UpgradeLevel();
-            if (mod.Level == 0)
+            if (mod.Level == 0) //Если SkillMod новый
             {
                 //player.Skills.Storage.AddSkillMod(mod);
-                if (mod.BaseMod)
+                if (mod.BaseMod) //Если SkillMod является базовым модом навыка
                 {
                     addSkill(mod);
                     avaibleMods.Remove(mod);
-                    //mod.ParentSkill.BaseSkillMod.UpgradeLevel();
                 }
                 player.SkillsActivation.Storage.AddSkillMod(mod);
-                foreach (string excludedMod in mod.SkillModsForExclusion)
+                foreach (string excludedMod in mod.SkillModsForExclusion) //SkillMods для исключения
                 {
                     bannedSkillMods.Add(excludedMod);
                 }
             }
             mod.ParentSkill.ApplyUpgrade(mod.Name, mod.Level);
-            //player.Skills.Storage.AddSkillMod(mod);
             if (mod.Level == mod.MaximumLevel)
                 avaibleMods.Remove(mod);
             mod.ParentSkill.BaseSkillMod.UpgradeLevel();

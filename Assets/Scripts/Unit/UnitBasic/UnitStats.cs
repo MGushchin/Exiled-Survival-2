@@ -37,7 +37,8 @@ public enum StatTag
     MultistrikeChance,
     BleedingChance,
     BleedingDamage,
-    BleedingDuration
+    BleedingDuration,
+    AttackRange
 }
 
 [System.Serializable]
@@ -131,6 +132,7 @@ public class UnitStats : MonoBehaviour
         stats[StatTag.BleedingDamage].AddBaseValue(2);
         stats[StatTag.PoisonDuration].AddBaseValue(2);
         stats[StatTag.BleedingDuration].AddBaseValue(4);
+        stats[StatTag.AttackRange].AddBaseValue(1);
         //Debug
         
         foreach (SetterStatData stat in StartingStats)
@@ -231,16 +233,6 @@ public class UnitStats : MonoBehaviour
         {
             stats[stat.Tag] = new CombinedStat(stat.Base, stat.Increase, stat.More);
         }
-        //this.life.SetValue(life, 0 , new List<float>());
-        //OnStatChanged[StatTag.life].Invoke(this.life.Value);
-        //this.damageMod.SetValue(damage, 0, new List<float>());
-        //OnStatChanged[StatTag.damage].Invoke(this.damageMod.Value);
-        //this.movementSpeed.SetValue(1, movementSpeed, new List<float>());
-        //OnStatChanged[StatTag.movementSpeed].Invoke(this.movementSpeed.Value);
-        //this.cooldownRecovery.SetValue(1, cooldownRecovery, new List<float>());
-        //OnStatChanged[StatTag.cooldownRecovery].Invoke(this.cooldownRecovery.ModValue);
-        ////this.attackSpeed.AddBaseValue(attackSpeed);
-        ////OnStatChanged[StatTag.attackSpeed].Invoke(this.attackSpeed.Value);
     }
 
     public void AddStat(StatTag tag, StatModType type, float value)

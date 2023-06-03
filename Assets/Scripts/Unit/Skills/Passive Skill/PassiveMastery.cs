@@ -35,9 +35,6 @@ namespace Skills
             owner = skillOwner;
             selfTransform = gameObject.transform;
             cooldown = 0;
-            Debug.Log(gameObject.name);
-            Debug.Log(skillOwner);
-            Debug.Log(owner);
         }
 
         public override bool UseSkill(Vector3 castPoint)

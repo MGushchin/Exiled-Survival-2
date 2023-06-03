@@ -11,28 +11,36 @@ public class AbstractFactory: MonoBehaviour
     private List<UnitActions> activeMagicUnitsPool;
     private List<UnitActions> reserveRareUnitsPool;
     private List<UnitActions> activeRareUnitsPool;
+    private List<UnitActions> reserveBossUnitsPool;
+    private List<UnitActions> activeBossUnitsPool;
     //Game rules
-    private const float magicUnitsMult = 1.5f;
-    private const float rareUnitsMult = 2f;
+    private const float magicUnitsStatMult = 1.5f;
+    private const float magicUnitsSizeMult = 1.25f;
+    private const float rareUnitsStatMult = 2f;
+    private const float rareUnitsSizeMult = 1.5f;
+    private const float bossUnitsStatMult = 5;
+    private const float bossUnitsSizeMult = 3;
 
     public void Init(int commonCount, int magicCount, int rareCount)
     {
-        if(commonCount > 0)
+        reserveCommonUnitsPool = new List<UnitActions>();
+        activeCommonUnitsPool = new List<UnitActions>();
+        reserveMagicUnitsPool = new List<UnitActions>();
+        activeMagicUnitsPool = new List<UnitActions>();
+        reserveRareUnitsPool = new List<UnitActions>();
+        activeRareUnitsPool = new List<UnitActions>();
+        reserveBossUnitsPool = new List<UnitActions>();
+        activeBossUnitsPool = new List<UnitActions>();
+        if (commonCount > 0)
         {
-            reserveCommonUnitsPool = new List<UnitActions>();
-            activeCommonUnitsPool = new List<UnitActions>();
             createCommonUnit(commonCount);
         }
         if (magicCount > 0)
         {
-            reserveMagicUnitsPool = new List<UnitActions>();
-            activeMagicUnitsPool = new List<UnitActions>();
             createMagicUnit(magicCount);
         }
         if (rareCount > 0)
         {
-            reserveRareUnitsPool = new List<UnitActions>();
-            activeRareUnitsPool = new List<UnitActions>();
             createRareUnit(rareCount);
         }
     }
@@ -60,7 +68,7 @@ public class AbstractFactory: MonoBehaviour
             SpriteRenderer renderer;
             renderer = action.Animations.GetComponent<SpriteRenderer>(); //Переписать
             renderer.color = new Color(0, 0, 50);
-            unit.transform.localScale = new Vector3(unit.transform.localScale.x * 1.25f, unit.transform.localScale.y * 1.25f, 1);
+            unit.transform.localScale = new Vector3(unit.transform.localScale.x * magicUnitsSizeMult, unit.transform.localScale.y * magicUnitsSizeMult, 1);
             //Init
             action.InitUnit();
             //action.OnDeath.AddListener(ReturnToMagicPool);
@@ -79,11 +87,30 @@ public class AbstractFactory: MonoBehaviour
             SpriteRenderer renderer;
             renderer = action.Animations.GetComponent<SpriteRenderer>(); //Переписать
             renderer.color = new Color(153, 153, 0);
-            unit.transform.localScale = new Vector3(unit.transform.localScale.x * 1.5f, unit.transform.localScale.y * 1.5f, 1);
+            unit.transform.localScale = new Vector3(unit.transform.localScale.x * rareUnitsSizeMult, unit.transform.localScale.y * rareUnitsSizeMult, 1);
             //Init
             action.InitUnit();
             //action.OnDeath.AddListener(ReturnToRarePool);
             reserveRareUnitsPool.Add(action);
+            unit.SetActive(false);
+        }
+    }
+
+    private void createBossUnit(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            GameObject unit = Instantiate(Prefab);
+            UnitActions action = unit.GetComponent<UnitActions>();
+            //Visual
+            SpriteRenderer renderer;
+            renderer = action.Animations.GetComponent<SpriteRenderer>(); //Переписать
+            renderer.color = new Color(50, 0, 0);
+            unit.transform.localScale = new Vector3(unit.transform.localScale.x * bossUnitsSizeMult, unit.transform.localScale.y * bossUnitsSizeMult, 1);
+            //Init
+            action.InitUnit();
+            //action.OnDeath.AddListener(ReturnToRarePool);
+            reserveBossUnitsPool.Add(action);
             unit.SetActive(false);
         }
     }
@@ -121,16 +148,17 @@ public class AbstractFactory: MonoBehaviour
         activeMagicUnitsPool.Add(unit);
         unit.OnDeath.AddListener(ReturnToMagicPool);
         List<SetterStatData> startingStats = new List<SetterStatData>();
-        float life = 10 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * magicUnitsMult;
-        float damage = 1 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * magicUnitsMult;
-        float armour = 10 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * magicUnitsMult;
+        float life = 10 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * magicUnitsStatMult;
+        float damage = 1 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * magicUnitsStatMult;
+        float armour = 10 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * magicUnitsStatMult;
         startingStats.Add(new SetterStatData { Tag = StatTag.life, Base = life, Increase = 0, More = new List<float>() });
         startingStats.Add(new SetterStatData { Tag = StatTag.PhysicalDamage, Base = damage, Increase = 0, More = new List<float>() });
         startingStats.Add(new SetterStatData { Tag = StatTag.Armour, Base = armour, Increase = 0, More = new List<float>() });
+        startingStats.Add(new SetterStatData { Tag = StatTag.AttackRange, Base = magicUnitsSizeMult * 0.75f, Increase = 0, More = new List<float>() });
         unit.Stats.SetStats(startingStats);
         unit.Experience.SetLevel(GlobalData.instance.LevelData.MonsterLevel);
         //Drop adding
-        GameObject expirienceDrop = DropableItemsFactory.Instance.CreateInactiveExperienceItem(GlobalData.instance.LevelData.MonsterLevel * magicUnitsMult);
+        GameObject expirienceDrop = DropableItemsFactory.Instance.CreateInactiveExperienceItem(GlobalData.instance.LevelData.MonsterLevel * magicUnitsStatMult);
         unit.Drop.AddItemToDrop(expirienceDrop);
         UnitPool.instance.AddToPool(unit, unit.Stats.Ally);
         return unit;
@@ -145,21 +173,47 @@ public class AbstractFactory: MonoBehaviour
         activeRareUnitsPool.Add(unit);
         unit.OnDeath.AddListener(ReturnToRarePool);
         List<SetterStatData> startingStats = new List<SetterStatData>();
-        float life = 10 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * rareUnitsMult;
-        float damage = 1 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * rareUnitsMult;
-        float armour = 10 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * rareUnitsMult;
+        float life = 10 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * rareUnitsStatMult;
+        float damage = 1 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * rareUnitsStatMult;
+        float armour = 10 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * rareUnitsStatMult;
         startingStats.Add(new SetterStatData { Tag = StatTag.life, Base = life, Increase = 0, More = new List<float>() });
         startingStats.Add(new SetterStatData { Tag = StatTag.PhysicalDamage, Base = damage, Increase = 0, More = new List<float>() });
         startingStats.Add(new SetterStatData { Tag = StatTag.Armour, Base = armour, Increase = 0, More = new List<float>() });
+        startingStats.Add(new SetterStatData { Tag = StatTag.AttackRange, Base = rareUnitsSizeMult * 0.75f, Increase = 0, More = new List<float>() });
         unit.Stats.SetStats(startingStats);
         unit.Experience.SetLevel(GlobalData.instance.LevelData.MonsterLevel);
         //Drop adding
-        GameObject expirienceDrop = DropableItemsFactory.Instance.CreateInactiveExperienceItem(GlobalData.instance.LevelData.MonsterLevel * rareUnitsMult);
+        GameObject expirienceDrop = DropableItemsFactory.Instance.CreateInactiveExperienceItem(GlobalData.instance.LevelData.MonsterLevel * rareUnitsStatMult);
         unit.Drop.AddItemToDrop(expirienceDrop);
         UnitPool.instance.AddToPool(unit, unit.Stats.Ally);
         return unit;
     }
 
+    public UnitActions GetBossEnemy()
+    {
+        Debug.Log("Try to spawn");
+        if (reserveBossUnitsPool.Count == 0)
+            createBossUnit(1);
+        UnitActions unit = reserveBossUnitsPool[0];
+        reserveBossUnitsPool.RemoveAt(0);
+        activeBossUnitsPool.Add(unit);
+        unit.OnDeath.AddListener(ReturnToBossPool);
+        List<SetterStatData> startingStats = new List<SetterStatData>();
+        float life = 10 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * bossUnitsStatMult;
+        float damage = 1 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * bossUnitsStatMult;
+        float armour = 10 * Mathf.Pow(1.25f, GlobalData.instance.LevelData.MonsterLevel - 1) * bossUnitsStatMult;
+        startingStats.Add(new SetterStatData { Tag = StatTag.life, Base = life, Increase = 0, More = new List<float>() });
+        startingStats.Add(new SetterStatData { Tag = StatTag.PhysicalDamage, Base = damage, Increase = 0, More = new List<float>() });
+        startingStats.Add(new SetterStatData { Tag = StatTag.Armour, Base = armour, Increase = 0, More = new List<float>() });
+        startingStats.Add(new SetterStatData { Tag = StatTag.AttackRange, Base = bossUnitsSizeMult * 0.75f, Increase = 0, More = new List<float>() });
+        unit.Stats.SetStats(startingStats);
+        unit.Experience.SetLevel(GlobalData.instance.LevelData.MonsterLevel);
+        //Drop adding
+        GameObject expirienceDrop = DropableItemsFactory.Instance.CreateInactiveExperienceItem(GlobalData.instance.LevelData.MonsterLevel * bossUnitsStatMult);
+        unit.Drop.AddItemToDrop(expirienceDrop);
+        UnitPool.instance.AddToPool(unit, unit.Stats.Ally);
+        return unit;
+    }
 
     public void ReturnToCommonPool(UnitActions action)
     {
@@ -180,5 +234,12 @@ public class AbstractFactory: MonoBehaviour
         reserveRareUnitsPool.Add(action);
         activeRareUnitsPool.Remove(action);
         action.OnDeath.RemoveListener(ReturnToRarePool);
+    }
+
+    public void ReturnToBossPool(UnitActions action)
+    {
+        reserveBossUnitsPool.Add(action);
+        activeBossUnitsPool.Remove(action);
+        action.OnDeath.RemoveListener(ReturnToBossPool);
     }
 }
