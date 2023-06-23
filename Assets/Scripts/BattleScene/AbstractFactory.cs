@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UIMarkers;
 using UnityEngine;
 
 public class AbstractFactory: MonoBehaviour
@@ -157,6 +158,8 @@ public class AbstractFactory: MonoBehaviour
         startingStats.Add(new SetterStatData { Tag = StatTag.AttackRange, Base = magicUnitsSizeMult * 0.75f, Increase = 0, More = new List<float>() });
         unit.Stats.SetStats(startingStats);
         unit.Experience.SetLevel(GlobalData.instance.LevelData.MonsterLevel);
+        //Name
+        unit.gameObject.name += " (Magic)";
         //Drop adding
         GameObject expirienceDrop = DropableItemsFactory.Instance.CreateInactiveExperienceItem(GlobalData.instance.LevelData.MonsterLevel * magicUnitsStatMult);
         unit.Drop.AddItemToDrop(expirienceDrop);
@@ -182,6 +185,8 @@ public class AbstractFactory: MonoBehaviour
         startingStats.Add(new SetterStatData { Tag = StatTag.AttackRange, Base = rareUnitsSizeMult * 0.75f, Increase = 0, More = new List<float>() });
         unit.Stats.SetStats(startingStats);
         unit.Experience.SetLevel(GlobalData.instance.LevelData.MonsterLevel);
+        //Name
+        unit.gameObject.name += " (Rare)";
         //Drop adding
         GameObject expirienceDrop = DropableItemsFactory.Instance.CreateInactiveExperienceItem(GlobalData.instance.LevelData.MonsterLevel * rareUnitsStatMult);
         unit.Drop.AddItemToDrop(expirienceDrop);
@@ -191,7 +196,6 @@ public class AbstractFactory: MonoBehaviour
 
     public UnitActions GetBossEnemy()
     {
-        Debug.Log("Try to spawn");
         if (reserveBossUnitsPool.Count == 0)
             createBossUnit(1);
         UnitActions unit = reserveBossUnitsPool[0];
@@ -206,20 +210,33 @@ public class AbstractFactory: MonoBehaviour
         startingStats.Add(new SetterStatData { Tag = StatTag.PhysicalDamage, Base = damage, Increase = 0, More = new List<float>() });
         startingStats.Add(new SetterStatData { Tag = StatTag.Armour, Base = armour, Increase = 0, More = new List<float>() });
         startingStats.Add(new SetterStatData { Tag = StatTag.AttackRange, Base = bossUnitsSizeMult * 0.75f, Increase = 0, More = new List<float>() });
+        startingStats.Add(new SetterStatData { Tag = StatTag.AreaOfEffect, Base = 1, Increase = 0, More = new List<float>() { bossUnitsSizeMult * 0.75f * 100 } });
         unit.Stats.SetStats(startingStats);
         unit.Experience.SetLevel(GlobalData.instance.LevelData.MonsterLevel);
+
+        //Name
+        unit.gameObject.name += " (Boss)";
+
         //Drop adding
         GameObject expirienceDrop = DropableItemsFactory.Instance.CreateInactiveExperienceItem(GlobalData.instance.LevelData.MonsterLevel * bossUnitsStatMult);
         unit.Drop.AddItemToDrop(expirienceDrop);
         UnitPool.instance.AddToPool(unit, unit.Stats.Ally);
+
+        //Marker
+        unit.Animations.gameObject.AddComponent(typeof(MarkerTarget));
+        MarkerTarget marker = unit.Animations.gameObject.GetComponent<MarkerTarget>();
+        marker.Init(MarkerType.Boss);
+
         return unit;
     }
 
+    //ѕереработать повтор€ющийс€ код
     public void ReturnToCommonPool(UnitActions action)
     {
         reserveCommonUnitsPool.Add(action);
         activeCommonUnitsPool.Remove(action);
         action.OnDeath.RemoveListener(ReturnToCommonPool);
+        action.OnTakingDamage.RemoveAllListeners();
     }
 
     public void ReturnToMagicPool(UnitActions action)
@@ -227,6 +244,7 @@ public class AbstractFactory: MonoBehaviour
         reserveMagicUnitsPool.Add(action);
         activeMagicUnitsPool.Remove(action);
         action.OnDeath.RemoveListener(ReturnToMagicPool);
+        action.OnTakingDamage.RemoveAllListeners();
     }
 
     public void ReturnToRarePool(UnitActions action)
@@ -234,6 +252,7 @@ public class AbstractFactory: MonoBehaviour
         reserveRareUnitsPool.Add(action);
         activeRareUnitsPool.Remove(action);
         action.OnDeath.RemoveListener(ReturnToRarePool);
+        action.OnTakingDamage.RemoveAllListeners();
     }
 
     public void ReturnToBossPool(UnitActions action)
@@ -241,5 +260,6 @@ public class AbstractFactory: MonoBehaviour
         reserveBossUnitsPool.Add(action);
         activeBossUnitsPool.Remove(action);
         action.OnDeath.RemoveListener(ReturnToBossPool);
+        action.OnTakingDamage.RemoveAllListeners();
     }
 }

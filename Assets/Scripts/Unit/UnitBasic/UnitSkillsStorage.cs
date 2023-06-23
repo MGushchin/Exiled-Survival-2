@@ -56,12 +56,12 @@ public class UnitSkillsStorage : MonoBehaviour
 
     public void AddSkillMod(SkillMod mod)
     {
-        if(storage.ContainsKey(mod.ParentSkill))
+        if (storage.ContainsKey(mod.ParentSkill))
         {
             storage[mod.ParentSkill].Add(mod);
         }
-        else
-            Debug.LogWarning("Skill storage не содерижить ключ родительского навыка");
+        else if(mod.ParentSkill != passives) //Переписать
+            Debug.LogWarning(string.Format("Skill storage не содерижить ключ родительского навыка {0}", mod.name));
     }
 
     public void ChangeActiveSkillsSlots(int skill1, int skill2)

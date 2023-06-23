@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1486974c54ad35842bb8f181868b9679, type: 3}
+  m_Name: PassiveArmour
+  m_EditorClassIdentifier: 
+  modName: Added Armour
+  icon: {fileID: 21300000, guid: 40f2d97515d2434418f9dcdd11d438a2, type: 3}
+  description: +(Affix1) to armour
+  maximumLevel: 10
+  level: 0
+  rarity: 0
+  tags: 02000000
+  weight: 100
+  baseMod: 0
+  Values:
+  - 5
+  Affixes:
+  - Tag: 5
+    ModType: 0
+    Value: 5
+  SkillsModsRequirements: []
+  SkillModsForExclusion: []

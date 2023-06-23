@@ -9,8 +9,6 @@ public class LocationLevelProgression : MonoBehaviour
     private IEnumerator levelUpCoroutine;
     private bool timerStarted = false;
 
-    private float timer = 0;
-
     public void AddLevel(int levelCount)
     {
         GlobalData.instance.LevelData.AddMonsterLevel(levelCount);

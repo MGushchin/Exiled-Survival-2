@@ -1,7 +1,31 @@
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
+[System.Serializable]
+public enum SkillTag
+{
+    Life,
+    Movement,
+    Armour,
+    Evasion,
+    Physical,
+    Elemental,
+    Fire,
+    Cold,
+    Lightning,
+    Critical,
+    Projectile,
+    Area,
+    Poison,
+    Attack,
+    Spell,
+    Bleeding,
+    DamageOverTime
+}
 
 public class PlayerSkillsGiver : MonoBehaviour
 {
@@ -31,27 +55,33 @@ public class PlayerSkillsGiver : MonoBehaviour
     private List<SkillMod> preparedMods = new List<SkillMod>();
     private List<string> bannedSkillMods = new List<string>();
     private Dictionary<SkillMod, skillData> skillDataByBaseSkillMod = new Dictionary<SkillMod, skillData>();
+    //Weight region
+    //private Dictionary<SkillTag, List<SkillMod>> skillModsByTags = new Dictionary<SkillTag, List<SkillMod>>();
+    public SkillTagWeightStorage WeightStorage;
 
     public void Init(UnitActions player)
     {
         this.player = player;
+
         for (int i = 0; i < skillsData.Count; i++)
         {
             if (skillsData[i].Enabled)
             {
                 skillDataByBaseSkillMod.Add(skillsData[i].BaseMod, skillsData[i]);
                 SkillMod mod = Instantiate(skillsData[i].BaseMod);
+
+                if(mod.Weight == 0) //Debug
+                    Debug.LogWarning(string.Format(@"Skill mod {0} weight = 0", mod.name));
+
                 mod.UpdateDescription();
                 skillsData[i].BaseMod = mod;
                 allModsByName.Add(mod.Name, mod);
+
                 if (checkModRequirements(mod))
-                {
                     avaibleMods.Add(mod);
-                }
                 else
-                {
                     unavaibleMods.Add(mod);
-                }
+
                 //ѕеребор пассивных умений
                 for (int j = 0; j < skillsData[i].SkillMods.Count; j++)
                 {
@@ -59,14 +89,11 @@ public class PlayerSkillsGiver : MonoBehaviour
                     skillsData[i].SkillMods[j] = mod;
                     allModsByName.Add(mod.Name, mod);
                     mod.UpdateDescription();
+
                     if (checkModRequirements(mod))
-                    {
                         avaibleMods.Add(mod);
-                    }
                     else
-                    {
                         unavaibleMods.Add(mod);
-                    }
                 }
             }
         }
@@ -90,6 +117,60 @@ public class PlayerSkillsGiver : MonoBehaviour
             SkillMod mod = avaibleMods[Random.Range(0, avaibleMods.Count)];
             avaibleMods.Remove(mod);
             preparedMods.Add(mod);
+        }
+        foreach (SkillMod mod in preparedMods) //?? переписать
+            avaibleMods.Add(mod);
+        return preparedMods;
+    }
+
+    public List<SkillMod> GetWeightedRandomMods(int count)
+    {
+        preparedMods.Clear();
+        float sumWeight = 0;
+        foreach(SkillMod mod in avaibleMods)
+        {
+            float resultMod = 0;
+
+            foreach(SkillTag tag in mod.Tags)
+                resultMod += WeightStorage.GetTagModifier(tag);
+
+            sumWeight += mod.Weight * resultMod;
+        }
+        while (count > 0 && avaibleMods.Count > 0)
+        {
+            SkillMod choicenMod = null;
+            count--;
+            float weightedRandom = Random.Range(0, sumWeight);
+            float currentWeightIndex = 0;
+            float prevWeight = 0;
+
+            foreach (SkillMod currentMod in avaibleMods)
+            {
+                float resultMod = 0;
+
+                foreach (SkillTag tag in currentMod.Tags)
+                    resultMod += WeightStorage.GetTagModifier(tag);
+
+                currentWeightIndex += currentMod.Weight * resultMod;
+                if (weightedRandom > currentWeightIndex)
+                {
+                    sumWeight -= prevWeight;
+                    if (choicenMod == null) //Debug
+                    {
+                        prevWeight = currentMod.Weight * resultMod;
+                        choicenMod = currentMod;
+                    }
+                    break;
+                }
+
+                prevWeight = currentMod.Weight * resultMod;
+                choicenMod = currentMod;
+                //Debug.Log(string.Format("Current mod: {0}", choicenMod.name));
+            }
+            if (choicenMod == null)
+                Debug.LogError("Null mod detected");
+            avaibleMods.Remove(choicenMod);
+            preparedMods.Add(choicenMod);
         }
         foreach (SkillMod mod in preparedMods) //?? переписать
             avaibleMods.Add(mod);
@@ -145,7 +226,8 @@ public class PlayerSkillsGiver : MonoBehaviour
                     bannedSkillMods.Add(excludedMod);
                 }
             }
-            mod.ParentSkill.ApplyUpgrade(mod.Name, mod.Level);
+            updateWeightModifiers(mod);
+            mod.ParentSkill.ApplyUpgrade(mod);
             if (mod.Level == mod.MaximumLevel)
                 avaibleMods.Remove(mod);
             mod.ParentSkill.BaseSkillMod.UpgradeLevel();
@@ -169,6 +251,8 @@ public class PlayerSkillsGiver : MonoBehaviour
                     {
                         GameObject skillObject = alreadyCreated.gameObject;
                         alreadyCreated.SetBaseSkillMod(skillsData[i].BaseMod);
+                        updateWeightModifiers(mod);
+
                         foreach (SkillMod skillMod in skillsData[i].SkillMods)
                         {
                             skillMod.SetParentSkill(alreadyCreated);
@@ -184,12 +268,10 @@ public class PlayerSkillsGiver : MonoBehaviour
                 }
                 mod.ParentSkill.BaseSkillMod.UpgradeLevel();
             }
-            mod.ParentSkill.ApplyUpgrade(mod.Name, mod.Level);
+            mod.ParentSkill.ApplyUpgrade(mod);
             player.SkillsActivation.Storage.AddSkillMod(mod);
             checkAllSkillRequirements();
         }
-        else
-            Debug.LogWarning("Key exceprion " + skillModName);
         OnChange.Invoke();
     }
 
@@ -244,7 +326,7 @@ public class PlayerSkillsGiver : MonoBehaviour
             }
         }
         if (!find)
-            Debug.LogError("Not Finded skill mods to set parent");
+            Debug.LogError("Not Finded skill mods to set parent " + mod.name);
     }
 
     private void checkAllSkillRequirements()
@@ -309,6 +391,14 @@ public class PlayerSkillsGiver : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    private void updateWeightModifiers(SkillMod mod)
+    {
+        foreach(SkillTag tag in mod.Tags)
+        {
+            WeightStorage.AddTag(tag);
         }
     }
 }

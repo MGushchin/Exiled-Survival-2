@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UIMarkers;
 using UnityEngine;
 
 public class BattleSceneInit : MonoBehaviour
@@ -8,6 +9,7 @@ public class BattleSceneInit : MonoBehaviour
     public LevelSetup AreaSetup;
     public CameraFollow Follower;
     public LevelStatistics Statistics;
+    public Canvas MainCanvas;
     private EnemySpawn spawnSystem;
     private GameObject sceneData;
 
@@ -18,6 +20,9 @@ public class BattleSceneInit : MonoBehaviour
         GameObject playerGameObject = PlayerSetup.CreatePlayerPrefab(characterType);
         Follower.SetTarget(playerGameObject.transform);
         #endregion
+
+        //Marker system init
+        MarkerSystem.instance.Init(playerGameObject.transform, MainCanvas.transform);
 
         //Arena generation
         AreaSetup.SetupLevel();

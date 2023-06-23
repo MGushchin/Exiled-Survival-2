@@ -18,8 +18,7 @@ public class Bladestorm : Skill
     private IEnumerator cooldownCoroutine;
 
     private bool following = false;
-    private bool blood = false;
-    private bool sand = false;
+    private bool homing = false;
 
     #region SkillParams
     private CombinedStat damageModifier = new CombinedStat(4, 0, new List<float> { 0.5f }); //50% damage mult
@@ -113,7 +112,8 @@ public class Bladestorm : Skill
         for (int i = 0; i < hits.Count; i++)
         {
             //Setup transform data
-            hits[i].hit.SelfTransform.position = selfTransform.position + Vector3.Normalize(castPoint - transform.position) + offset;
+            if(!following)
+                hits[i].hit.SelfTransform.position = selfTransform.position + Vector3.Normalize(castPoint - transform.position) + offset;
             hits[i].Delay.SetDelay(resultDuration);
             hits[i].hit.SelfTransform.rotation = Quaternion.Euler(selfTransform.rotation.eulerAngles.x, selfTransform.rotation.eulerAngles.y, (Mathf.Atan2(castPoint.y - selfTransform.position.y, castPoint.x - selfTransform.position.x) * Mathf.Rad2Deg/* - 90*/)); //Переписать
             offset = new Vector3(Random.Range(-offsetMagnitude, offsetMagnitude), Random.Range(-offsetMagnitude, offsetMagnitude), 0);
@@ -143,6 +143,17 @@ public class Bladestorm : Skill
                 temporalHit.hit.OnFeedbackReceived.AddListener(owner.TakeHitFeedback);
                 hitsPool.Enqueue(temporalHit);
                 temporal.SetActive(false);
+                if(homing)
+                {
+                    Homing homing = temporal.AddComponent(typeof(Homing)) as Homing;
+                    homing.SetAlly(owner.Ally);
+                    homing.SetSpeed(1);
+                }
+                if(following)
+                {
+                    temporal.transform.parent = owner.gameObject.transform;
+                    temporal.transform.position = owner.gameObject.transform.position;
+                }
             }
         }
     }
@@ -184,34 +195,50 @@ public class Bladestorm : Skill
         }
     }
 
-    public override void ApplyUpgrade(string name, int level)
+    public override void ApplyUpgrade(SkillMod mod)
     {
         //base.ApplyUpgrade(name, level);
-        switch (name)
+        switch (mod.Name)
         {
-            case ("0"):
+            case ("Bladestorm Damage"):
                 {
-
+                    damageModifier.AddIncreaseValue(mod.Affixes[0].Value);
                 }
                 break;
-            case ("1"):
+            case ("Bladestorm Area"):
                 {
-
+                    areaOfEffectModifier.AddIncreaseValue(mod.Affixes[0].Value);
                 }
                 break;
-            case ("2"):
+            case ("Bladestorm Duration"):
                 {
-
+                    durationModifier.AddIncreaseValue(mod.Affixes[0].Value);
                 }
                 break;
-            case ("3"):
+            case ("Bladestorm Homing"):
                 {
-
+                    homing = true;
+                    foreach(skillHit hit in hitsPool)
+                    {
+                        Homing homing = hit.hit.gameObject.AddComponent(typeof(Homing)) as Homing;
+                        homing.SetAlly(owner.Ally);
+                        homing.SetSpeed(1);
+                    }
+                }
+                break;
+            case ("Bladestorm Follow"):
+                {
+                    following = true;
+                    foreach (skillHit hit in hitsPool)
+                    {
+                        hit.hit.gameObject.transform.parent = owner.gameObject.transform;
+                        hit.hit.gameObject.transform.position = owner.gameObject.transform.position;
+                    }
                 }
                 break;
             default:
                 {
-
+                    Debug.Log("default");
                 }
                 break;
         }

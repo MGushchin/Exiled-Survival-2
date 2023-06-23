@@ -19,7 +19,7 @@ public class UnitDrop : MonoBehaviour
 
     public void DropItems()
     {
-        DropableItemsFactory.Instance.CreateExperienceItem(1, transform.position); //Переписать
+        //DropableItemsFactory.Instance.CreateExperienceItem(1, transform.position); //Переписать
         float x = 0;
         float y = 0;
         foreach(GameObject item in storedItems)

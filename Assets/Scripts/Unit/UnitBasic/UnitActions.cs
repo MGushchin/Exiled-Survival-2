@@ -25,6 +25,8 @@ public class UnitActions : MonoBehaviour
     public UnityEvent<int> OnLevelUp = new UnityEvent<int>();
     [HideInInspector]
     public UnityEvent<float, float> OnExperienceChanged = new UnityEvent<float, float>(); //перенести бары
+    [HideInInspector]
+    public UnityEvent<float, Vector3> OnTakingDamage = new UnityEvent<float, Vector3>();
     //Valuebars
     public Valuebar LifeValue;
     public bool Ally => Stats.Ally;
@@ -104,6 +106,7 @@ public class UnitActions : MonoBehaviour
         {
             Movement.LookAt(direction);
         }
+        SkillsActivation.SetCastPoint(direction);
     }
 
     public void UseSkill(Vector3 direction, int skillIndex) 
@@ -149,6 +152,8 @@ public class UnitActions : MonoBehaviour
             Death();
         }
 
+        OnTakingDamage.Invoke(damage, selfTransform.position);
+
         return feedback;
     }
 
@@ -163,6 +168,9 @@ public class UnitActions : MonoBehaviour
             feedback.KillingBlow = true;
             Death();
         }
+
+        OnTakingDamage.Invoke(damage, selfTransform.position);
+
         return feedback;
     }
 
@@ -178,15 +186,15 @@ public class UnitActions : MonoBehaviour
 
     public void TakeHitFeedback(HitFeedback feedback)
     {
-        Debug.Log(gameObject.name + ": Received hit feedback " + feedback.DamageDealth + " " + feedback.KillingBlow);
+        //Debug.Log(gameObject.name + ": Received hit feedback " + feedback.DamageDealth + " " + feedback.KillingBlow);
         float vampirismInstance = feedback.DamageDealth * Stats.GetStat(StatTag.LifeLeech) / 100;
         recovery.AddVampirismInstance(vampirismInstance);
     }
 
     public void TakeDotFeedback(HitFeedback feedback)
     {
-        if(feedback.KillingBlow)
-            Debug.Log(gameObject.name + ": Received dot feedback " + feedback.DamageDealth + " " + feedback.KillingBlow);
+        //if(feedback.KillingBlow)
+        //    Debug.Log(gameObject.name + ": Received dot feedback " + feedback.DamageDealth + " " + feedback.KillingBlow);
     }
 
     public void TakeExperience(float experience)

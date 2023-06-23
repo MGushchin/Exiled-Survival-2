@@ -32,7 +32,7 @@ public class SkillsUpgrade : MonoBehaviour
         //if (mod.Level == 0)
         //    storage.AddLearnedMod(mod);
         mod.UpgradeLevel();
-        UpgradeableSkill.ApplyUpgrade(mod.Name, mod.Level);
+        UpgradeableSkill.ApplyUpgrade(mod);
         //foreach(StatMod statMod in mod.UnitStatMods)
         //{
         //    owner.Stats.AddStat(statMod.Tag, statMod.TagType, statMod.Value);

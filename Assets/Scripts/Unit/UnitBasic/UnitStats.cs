@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using System;
 using Statuses;
 using Random = UnityEngine.Random;
+using System.Linq;
 
 [System.Serializable]
 public enum StatTag 
@@ -38,7 +39,8 @@ public enum StatTag
     BleedingChance,
     BleedingDamage,
     BleedingDuration,
-    AttackRange
+    AttackRange,
+    Duration
 }
 
 [System.Serializable]
@@ -133,8 +135,9 @@ public class UnitStats : MonoBehaviour
         stats[StatTag.PoisonDuration].AddBaseValue(2);
         stats[StatTag.BleedingDuration].AddBaseValue(4);
         stats[StatTag.AttackRange].AddBaseValue(1);
+        stats[StatTag.AreaOfEffect].AddBaseValue(1);
         //Debug
-        
+
         foreach (SetterStatData stat in StartingStats)
         {
             stats[stat.Tag] = new CombinedStat(stat.Base, stat.Increase, stat.More);
@@ -232,6 +235,7 @@ public class UnitStats : MonoBehaviour
         foreach (SetterStatData stat in startingStats)
         {
             stats[stat.Tag] = new CombinedStat(stat.Base, stat.Increase, stat.More);
+            OnStatChanged[stat.Tag].Invoke(stats[stat.Tag].Value);
         }
     }
 

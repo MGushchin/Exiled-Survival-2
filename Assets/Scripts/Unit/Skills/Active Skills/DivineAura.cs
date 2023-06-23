@@ -20,9 +20,8 @@ public class DivineAura : Skill
     //Skill Params
     private float baseSkillCooldown = 20;
     private CombinedStat cooldownModifier = new CombinedStat(20, 0, new List<float>());
-    private float baseSkillRadius = 1;
+    //private float baseSkillRadius = 1;
     private CombinedStat radiusModifier = new CombinedStat(1, 0, new List<float>());
-    private float auraBuffValue = 10;
     private CombinedStat auraBuffValueModifier = new CombinedStat(10, 0, new List<float>());
     private CombinedStat auraStrongBuffValueModifier = new CombinedStat(20, 0, new List<float>());
     private CombinedStat strongAuraDuration = new CombinedStat(4, 0, new List<float>());
@@ -122,10 +121,10 @@ public class DivineAura : Skill
         }
     }
 
-    public override void ApplyUpgrade(string name, int level)
+    public override void ApplyUpgrade(SkillMod mod)
     {
         //base.ApplyUpgrade(name, level);
-        switch (name)
+        switch (mod.name)
         {
             case ("Divine Aura Effect"):
                 {

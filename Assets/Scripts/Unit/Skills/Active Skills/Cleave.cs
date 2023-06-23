@@ -86,10 +86,9 @@ public class Cleave : Skill
             return false;
     }
 
-    private HitData getHitData()
+    protected override HitData getHitData(float baseCriticalStrikeChance, List<StatTag> skillTags)
     {
-        HitData hit = owner.Stats.GetHitData(baseCriticalStrikeChance, skillTags);
-        hit.HitSender = owner;
+        HitData hit = base.getHitData(baseCriticalStrikeChance, skillTags);
         hit.PhysicalDamage = damageModifier.ValueWithAddedParams(hit.PhysicalDamage);
         hit.FireDamage *= damageModifier.ModValue;
         hit.ColdDamage *= damageModifier.ModValue;
@@ -100,7 +99,7 @@ public class Cleave : Skill
     private List<skillHit> setupHit(Vector3 castPoint, List<skillHit> hits)
     {
         //Setup
-        HitData hit = getHitData();
+        HitData hit = getHitData(baseCriticalStrikeChance, skillTags);
         float offsetMagnitude = resultAreaOfEffect / 2;
         bool flip = true;
         if (Random.Range(0, 2) == 0)
@@ -187,10 +186,10 @@ public class Cleave : Skill
         }
     }
 
-    public override void ApplyUpgrade(string name, int level)
+    public override void ApplyUpgrade(SkillMod mod)
     {
         //base.ApplyUpgrade(name, level);
-        switch (name)
+        switch (mod.Name)
         {
             case ("Cleave Damage"):
                 {

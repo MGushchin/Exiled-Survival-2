@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ public class DungeonSetup : MonoBehaviour, ILevelSetup
     public GameObject selfObject => gameObject;
     public TileBase WalkableTile;
     public TileBase BlockableTile;
+    public List<GameObject> Decorations = new List<GameObject>();
     private Tilemap walkableTilemap;
     private Tilemap blockingTilemap;
     private NoiseMapGenerator noiseMapGenerator = new NoiseMapGenerator();
@@ -66,7 +68,7 @@ public class DungeonSetup : MonoBehaviour, ILevelSetup
         return map;
     }
 
-    public MapData Setup(int size, float noise)
+    public MapData Setup(int size, float noise, float decorationsPercent)
     {
         Vector2Int start = new Vector2Int((int)transform.position.x, (int)transform.position.y);
         MapData map = new MapData(size + 20, size + 20, (int)transform.position.x - 10, (int)transform.position.y - 10); //Подправить универсальность
@@ -79,7 +81,12 @@ public class DungeonSetup : MonoBehaviour, ILevelSetup
                 {
                     walkableTilemap.SetTile(new Vector3Int(x, y), WalkableTile);
                     map.SetPoint(x, y, true);
-
+                    //Decorations adding
+                    if (Random.Range(1, 100) <= decorationsPercent)
+                    {
+                        GameObject decor = Instantiate(Decorations[Random.Range(0, Decorations.Count)], walkableTilemap.transform);
+                        decor.transform.position = new Vector3Int(x, y, 0);
+                    }
                 }
                 else
                 {

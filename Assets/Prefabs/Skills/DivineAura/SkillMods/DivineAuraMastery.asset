@@ -19,6 +19,8 @@ MonoBehaviour:
   maximumLevel: 20
   level: 0
   rarity: 0
+  tags: 
+  weight: 100
   baseMod: 1
   Values:
   - 10

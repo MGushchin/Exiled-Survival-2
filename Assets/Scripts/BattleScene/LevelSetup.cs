@@ -50,7 +50,7 @@ public class LevelSetup : MonoBehaviour
         currentLevel.selfObject.transform.position = new Vector3(-size.x / 2, -size.y / 2, 0);
         //GlobalData.instance.LevelData.Map = currentLevel.Setup((int)size.x, 1);
         //GlobalData.instance.LevelData.Map = currentLevel.SetupRandomly((int)size.x, (int)size.y);
-        GlobalData.instance.LevelData.Map = currentLevel.Setup((int)size.x, (int)size.y);
+        GlobalData.instance.LevelData.Map = currentLevel.Setup((int)size.x, (int)size.y, 10);
         Navigation.BuildNavMesh();
         Progression.SetTimerSetting(1, 60);
         Progression.StartTimer();

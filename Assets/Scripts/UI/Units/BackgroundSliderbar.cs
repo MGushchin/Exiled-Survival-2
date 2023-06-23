@@ -12,12 +12,13 @@ public class BackgroundSliderbar : MonoBehaviour
     private float targetValue;
     private bool coroutineStarted = false;
     private IEnumerator changeCurrentValueCoroutine;
+    private bool active = false;
 
     public void SetValues(float value, float maxValue)
     {
         slider.maxValue = maxValue;
         targetValue = value;
-        if (!coroutineStarted && targetValue < slider.value)
+        if (!coroutineStarted && targetValue < slider.value && active)
         {
             changeCurrentValueCoroutine = changeCurrentValue();
             StartCoroutine(changeCurrentValueCoroutine);
@@ -39,10 +40,16 @@ public class BackgroundSliderbar : MonoBehaviour
 
     private void OnDisable()
     {
-        if(coroutineStarted)
+        active = false;
+        if (coroutineStarted)
         {
             coroutineStarted = false;
             StopCoroutine(changeCurrentValueCoroutine);
-        }
+    }
+
+}
+    private void OnEnable()
+    {
+        active = true;
     }
 }

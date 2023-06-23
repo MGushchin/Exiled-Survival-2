@@ -22,7 +22,7 @@ public class Cyclone : Skill
     private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float> { 4 });
     private float baseSkillCooldown = 1;
     private float baseCriticalStrikeChance = 5;
-    private float movementSpeedSlow = -40;
+    //private float movementSpeedSlow = -40;
     private CombinedStat areaOfEffectModifier = new CombinedStat(1, 0, new List<float>());
     //Ailments section
 
@@ -117,10 +117,10 @@ public class Cyclone : Skill
         }
     }
 
-    public override void ApplyUpgrade(string name, int level)
+    public override void ApplyUpgrade(SkillMod mod)
     {
         //base.ApplyUpgrade(name, level);
-        switch (name)
+        switch (mod.name)
         {
             case ("0"):
                 {

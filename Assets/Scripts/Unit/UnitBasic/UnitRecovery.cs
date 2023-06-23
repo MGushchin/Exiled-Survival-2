@@ -10,7 +10,7 @@ public class UnitRecovery
     //RecoveryStats
     private float vampirismRecoveryPerSecondMaximum = 0.1f;
     private float vampirismMaximumPerInstance = 0.1f;
-    private float vampirismPerSecondMultiplier = 1;
+    //private float vampirismPerSecondMultiplier = 1;
     
     public UnitRecovery(UnitActions owner)
     {

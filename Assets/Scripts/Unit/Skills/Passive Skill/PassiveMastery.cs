@@ -29,6 +29,7 @@ namespace Skills
         private CombinedStat coldDamageMod = new CombinedStat(0, 0, new List<float>());
         private CombinedStat lightningDamageMod = new CombinedStat(0, 0, new List<float>());
         private CombinedStat armourMod = new CombinedStat(0, 0, new List<float>());
+        private List<Affix> affixes = new List<Affix>();
 
         public override void InitSKill(UnitActions skillOwner)
         {
@@ -53,57 +54,77 @@ namespace Skills
         }
 
 
-        public override void ApplyUpgrade(string name, int level)
+        public override void ApplyUpgrade(SkillMod mod)
         {
-            switch (name)
+            foreach(Affix affix in mod.Affixes)
             {
-                case ("Maximum Life"):
-                    {
-                        maximumLifeMod.AddBaseValue(5);
-                        owner.Stats.AddStat(StatTag.life, StatModType.Base, 5);
-                    }
-                    break;
-                case ("Life Regeneration"):
-                    {
-                        lifeRegenerationMod.AddBaseValue(1);
-                        owner.Stats.AddStat(StatTag.lifeRegeneration, StatModType.Base, 1);
-                    }
-                    break;
-                case ("Physical Damage"):
-                    {
-                        physicalDamageMod.AddBaseValue(2);
-                        owner.Stats.AddStat(StatTag.PhysicalDamage, StatModType.Base, 2);
+                affixes.Add(affix);
+                owner.Stats.AddStat(affix.Tag, affix.ModType, affix.Value);
+            }
+            switch (mod.name)
+            {
+                //case ("Maximum Life"):
+                //    {
+                //        maximumLifeMod.AddBaseValue(mod.Values[0]);
+                //        owner.Stats.AddStat(StatTag.life, StatModType.Base, mod.Values[0]);
+                //    }
+                //    break;
+                //case ("Life Regeneration"):
+                //    {
+                //        lifeRegenerationMod.AddBaseValue(mod.Values[0]);
+                //        owner.Stats.AddStat(StatTag.lifeRegeneration, StatModType.Base, mod.Values[0]);
+                //    }
+                //    break;
+                //case ("Physical Damage"):
+                //    {
+                //        physicalDamageMod.AddBaseValue(mod.Values[0]);
+                //        owner.Stats.AddStat(StatTag.PhysicalDamage, StatModType.Base, mod.Values[0]);
 
-                    }
-                    break;
-                case ("Fire Damage"):
-                    {
-                        fireDamageMod.AddBaseValue(2);
-                        owner.Stats.AddStat(StatTag.FireDamage, StatModType.Base, 2);
+                //    }
+                //    break;
+                //case ("Fire Damage"):
+                //    {
+                //        fireDamageMod.AddBaseValue(mod.Values[0]);
+                //        owner.Stats.AddStat(StatTag.FireDamage, StatModType.Base, mod.Values[0]);
 
-                    }
-                    break;
-                case ("Cold Damage"):
-                    {
-                        coldDamageMod.AddBaseValue(2);
-                        owner.Stats.AddStat(StatTag.ColdDamage, StatModType.Base, 2);
+                //    }
+                //    break;
+                //case ("Cold Damage"):
+                //    {
+                //        coldDamageMod.AddBaseValue(mod.Values[0]);
+                //        owner.Stats.AddStat(StatTag.ColdDamage, StatModType.Base, mod.Values[0]);
 
-                    }
-                    break;
-                case ("Lightning Damage"):
-                    {
-                        lightningDamageMod.AddBaseValue(2);
-                        owner.Stats.AddStat(StatTag.LightningDamage, StatModType.Base, 2);
+                //    }
+                //    break;
+                //case ("Lightning Damage"):
+                //    {
+                //        lightningDamageMod.AddBaseValue(mod.Values[0]);
+                //        owner.Stats.AddStat(StatTag.LightningDamage, StatModType.Base, mod.Values[0]);
 
-                    }
-                    break;
-                case ("Armour"):
+                //    }
+                //    break;
+                //case ("Armour"):
+                //    {
+                //        armourMod.AddBaseValue(mod.Values[0]);
+                //        owner.Stats.AddStat(StatTag.Armour, StatModType.Base, mod.Values[0]);
+                //    }
+                //    break;
+                //case ("Attack Damage"):
+                //    {
+                //        armourMod.AddBaseValue(mod.Values[0]);
+                //        owner.Stats.AddStat(StatTag.Armour, StatModType.Base, mod.Values[0]);
+                //    }
+                //    break;
+                //case ("Attack Damage 2"):
+                //    {
+                //        armourMod.AddBaseValue(mod.Values[0]);
+                //        owner.Stats.AddStat(StatTag.Armour, StatModType.Base, mod.Values[0]);
+                //    }
+                //    break;
+                default:
                     {
-                        armourMod.AddBaseValue(5);
-                        owner.Stats.AddStat(StatTag.Armour, StatModType.Base, 5);
-
-                    }
-                    break;
+                        //Debug.LogError(string.Format("Default exception. Skill mod {0}", mod.name));
+                    }break;
             }
         }
     }

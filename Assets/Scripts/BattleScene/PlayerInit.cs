@@ -12,7 +12,8 @@ public class PlayerInit : MonoBehaviour
     public BackgroundSliderbar BackgroundSlider;
     public Sliderbar Experiencebar;
     public PlayerLevelUp LevelUp;
-    public PlayerSkillsGiver SkillsGiver;
+    public PlayerSkillsGiver ActiveSkillsGiver;
+    public PlayerSkillsGiver PassiveSkillsGiver;
     public PlayerSkillsDisplay SkillsDisplay;
     public DynamicSkillsDisplayPanel DynamicSkillPanel;
     public BattleSceneMenuPanel Menu;
@@ -36,7 +37,8 @@ public class PlayerInit : MonoBehaviour
         //Обновлениe умений
         SkillsDisplay.Init(playerActions.SkillsActivation);
         //Выдача пассивных умений
-        SkillsGiver.Init(playerActions);
+        ActiveSkillsGiver.Init(playerActions);
+        PassiveSkillsGiver.Init(playerActions);
         //Инициализация пасивных (скрытых) умений
         playerActions.SkillsActivation.Storage.Passives.InitSKill(playerActions);
         //Регистрация игрока в общих пулах

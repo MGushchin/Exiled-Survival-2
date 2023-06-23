@@ -169,10 +169,10 @@ public class EtherealWeapon : Skill
         }
     }
 
-    public override void ApplyUpgrade(string name, int level)
+    public override void ApplyUpgrade(SkillMod mod)
     {
         //base.ApplyUpgrade(name, level);
-        switch(name)
+        switch(mod.name)
         {
             case ("Ethereal Weapon Damage"):
                 {

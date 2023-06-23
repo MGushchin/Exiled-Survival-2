@@ -40,23 +40,27 @@ public class EnemySpawn : MonoBehaviour
                 }
                 break;
         }
-        enemy.gameObject.SetActive(true);
-        enemy.transform.position = getSpawnPosition();
-        UnitPool.instance.AddToPool(enemy, enemy.Stats.Ally);
-        enemy.Ressurect();
-        enemy.GetComponent<CommonEnemyBehaviour>().SetActive(true); //переписать
+        initUnit(enemy);
     }
 
     public UnitActions SpawnBossAroundPlayer()
     {
         UnitActions boss;
         boss = factory.CreateBossEnemy();
-        boss.gameObject.SetActive(true);
-        boss.transform.position = getSpawnPosition();
-        UnitPool.instance.AddToPool(boss, boss.Stats.Ally);
-        boss.Ressurect();
-        boss.GetComponent<CommonEnemyBehaviour>().SetActive(true); //переписать
+        initUnit(boss);
         return boss;
+    }
+
+    private UnitActions initUnit(UnitActions unit)
+    {
+        unit.gameObject.SetActive(true);
+        unit.transform.position = getSpawnPosition();
+        UnitPool.instance.AddToPool(unit, unit.Stats.Ally);
+        unit.Ressurect();
+        unit.GetComponent<CommonEnemyBehaviour>().SetActive(true); //переписать
+        unit.OnTakingDamage.AddListener(DamageIndicatorSpawner.instance.IndicateDamage);
+
+        return unit;
     }
 
     private Vector3 getSpawnPosition()

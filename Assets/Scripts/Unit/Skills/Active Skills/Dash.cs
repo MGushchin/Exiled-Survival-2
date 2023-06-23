@@ -14,12 +14,12 @@ public class Dash : Skill
     //Skill Params
     private float baseSkillCooldown = 4;
     private CombinedStat cooldownModifier = new CombinedStat(1, 0, new List<float>());
-    private float baseSkillRange = 1;
     private CombinedStat rangeModifier = new CombinedStat(1, 0, new List<float>());
 
     //Utility Params
     private float dashTime = 0.25f;
     private float dashForce = 200;
+
     #region UtilityLinks
     private float resultSkillCooldown => baseSkillCooldown * (1 / (owner.Stats.GetAdvancedStat(StatTag.CooldownRecovery).ModValueWithAddedParams(cooldownModifier)));
     private float resultCooldownRecoverySpeed => (1 / owner.Stats.GetAdvancedStat(StatTag.CooldownRecovery).Value);
@@ -98,10 +98,10 @@ public class Dash : Skill
         }
     }
 
-    public override void ApplyUpgrade(string name, int level)
+    public override void ApplyUpgrade(SkillMod mod)
     {
         //base.ApplyUpgrade(name, level);
-        switch (name)
+        switch (mod.name)
         {
             case (""):
                 {

@@ -18,6 +18,10 @@ MonoBehaviour:
   maximumLevel: 20
   level: 0
   rarity: 0
+  tags: 01000000
+  weight: 50
   baseMod: 1
+  Values: []
+  Affixes: []
   SkillsModsRequirements: []
   SkillModsForExclusion: []

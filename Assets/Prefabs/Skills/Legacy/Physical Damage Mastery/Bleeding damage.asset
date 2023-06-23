@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1486974c54ad35842bb8f181868b9679, type: 3}
+  m_Name: Bleeding damage
+  m_EditorClassIdentifier: 
+  modName: Bleeding damage
+  icon: {fileID: 21300000, guid: 0cf05c289109b014fad6ab662cefc79f, type: 3}
+  description: (1)% <color=green>increased</color> bleeding damage
+  maximumLevel: 1
+  level: 0
+  rarity: 0
+  baseMod: 0
+  Values:
+  - 30
+  SkillsModsRequirements:
+  - Name: Physical Damage Mastery
+    Level: 1
+  SkillModsForExclusion: []

@@ -44,6 +44,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0ee9245750e9b4d92818cbeebb7b08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnerPrefab: {fileID: 2931737526877802998, guid: aaa07781bfbb82548a0e830382e5c6cf, type: 3}
   WalkableTile: {fileID: 11400000, guid: 0461c3f9f26c0114a8bc3d7a960951b1, type: 2}
   BlockableTile: {fileID: 11400000, guid: 502922535fc8ff642b10b56fdbd76990, type: 2}
+  Decorations:
+  - {fileID: 2019851765629631518, guid: 091eebe917304254a8cd6b01fa17387f, type: 3}
+  - {fileID: 8470231740251555747, guid: a55df88e6fdaffa4bb404abf9dd937be, type: 3}
+  - {fileID: 6397683289428863362, guid: b5e00f46cc407f740b897f6bca12cefe, type: 3}
+  - {fileID: 783190323954726134, guid: 42c24a25b26f6994887f21aad7fa523f, type: 3}
+  - {fileID: 3343612420022972835, guid: fac1101ba39b8ac4c966bf1c3ea78756, type: 3}
+  - {fileID: 2783558891839335113, guid: 489bf475d82874145bd6ee11b07f27cd, type: 3}
+  - {fileID: 8260495307794582209, guid: 74958186bb581234aa11ffd56bf60ecc, type: 3}
+  - {fileID: 7811794229917634104, guid: 38cc0353316300a4d80f496140c972c3, type: 3}
+  - {fileID: 567304132664648821, guid: a3bc54fc6e9bada439a8c70db56945de, type: 3}
+  - {fileID: 5434265257518161375, guid: c667aca6fd35d7d4cb86822a36bbbc96, type: 3}
+  - {fileID: 6003817485910136358, guid: 49765d7821c366e4fb845eb53099f1ab, type: 3}
+  - {fileID: 5040383393266622457, guid: 664c82ecdb48d304f8329878fc56d79f, type: 3}
+  - {fileID: 6288471671317160187, guid: c4cb3141ca01deb4bb83182309fd6d9a, type: 3}
+  - {fileID: 3246023311570786804, guid: d9ca243395adad944b1619b7f77fd4be, type: 3}
+  - {fileID: 272322386829004425, guid: 1b0895d05f3f2aa4f9c2f9b79e19eba8, type: 3}
+  - {fileID: 6361605075023379985, guid: 9fe32248ff7171e4b9e4ca4870dcbe42, type: 3}
+  - {fileID: 974765345561700274, guid: 20533ae0f425bdc4dad11c830b215d0c, type: 3}
+  - {fileID: 1892616434796012541, guid: 607268a77a532884cb243d67c8adb67c, type: 3}
+  - {fileID: 2054192997061565841, guid: 9c2b0f11256760346a2fc0076a14076e, type: 3}
+  - {fileID: 6553782000873483183, guid: f5bb71aa3af38c945a0fd94321ebee62, type: 3}
+  - {fileID: 7961235083322744124, guid: e27b4a064abaa6740b8d05814257fc5a, type: 3}
+  - {fileID: 6254453525976871806, guid: 485231a473cec614382a77a49fd59f4c, type: 3}
+  - {fileID: 847814555654375007, guid: 56f30dc5dbbfa1542a8469e7b539690c, type: 3}
+  - {fileID: 1286487618014629089, guid: ea8ea10fc8b69b54ea6bfe04712df6db, type: 3}
+  - {fileID: 6738645054042925151, guid: 00174ade1fc58bc419ff57b90e0bd418, type: 3}
+  - {fileID: 4933042310006444827, guid: f3396ba8017387f48995490136e280ca, type: 3}

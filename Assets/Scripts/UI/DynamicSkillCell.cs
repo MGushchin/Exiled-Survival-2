@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 public class DynamicSkillCell : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class DynamicSkillCell : MonoBehaviour
     public Slider CooldownMask;
     public TMP_Text HotkeyText;
     public EditingDynamicSkills Edit;
+    public GameObject AutoImage;
+    public bool Auto = false;
     private Sprite clearSprite;
 
     private void Start()
@@ -33,6 +36,12 @@ public class DynamicSkillCell : MonoBehaviour
     public void SetCooldownData(float cooldownPercent)
     {
         CooldownMask.value = cooldownPercent;
+    }
+
+    public void SetAuto(bool value)
+    {
+        Auto = value;
+        AutoImage.SetActive(Auto);
     }
 
     public void Clear()

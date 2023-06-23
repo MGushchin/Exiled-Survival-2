@@ -111,10 +111,10 @@ public class LifeFlask : Skill
         owner.TakeHeal(recoveryPerSecondModifier.Value * remainingDuration);
     }
 
-    public override void ApplyUpgrade(string name, int level)
+    public override void ApplyUpgrade(SkillMod mod)
     {
         //base.ApplyUpgrade(name, level);
-        switch (name)
+        switch (mod.name)
         {
             case ("Life Flask Recovery Per Second"):
                 {

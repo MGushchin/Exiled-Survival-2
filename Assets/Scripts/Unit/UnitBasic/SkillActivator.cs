@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,8 @@ public class SkillActivator : MonoBehaviour //Переписать как сервис перед UnitSk
     public List<GameObject> SkillObjects = new List<GameObject>();
     //[SerializeField]
     //private List<Skill> skillList = new List<Skill>();
-    private List<int> autoCastIndexes = new List<int>();
+    public List<int> autoCastIndexes = new List<int>();
+    private Vector3 castPosition = Vector3.zero;
 
     public void InitSkills()
     {
@@ -22,6 +24,11 @@ public class SkillActivator : MonoBehaviour //Переписать как сервис перед UnitSk
         }
     }
 
+    public void SetCastPoint(Vector3 castPosition)
+    {
+        this.castPosition = castPosition;
+    }
+
     public void AddSkill(GameObject addedSkill)
     {
         Skill currentSkill = addedSkill.GetComponent<Skill>();
@@ -31,6 +38,19 @@ public class SkillActivator : MonoBehaviour //Переписать как сервис перед UnitSk
         currentSkill.InitSKill(owner);
     }
 
+    private void Update() //Возможно изменение реализации
+    {
+        autocast();
+    }
+
+    private void autocast()
+    {
+        foreach (int index in autoCastIndexes)
+        {
+            if (Storage.ActiveSkills[index] != null) // Временно
+                Storage.ActiveSkills[index].UseSkill(castPosition);
+        }
+    }
     //public void UseSkill(Vector3 castPoint)
     //{
     //    foreach (int index in autoCastIndexes)
@@ -48,10 +68,17 @@ public class SkillActivator : MonoBehaviour //Переписать как сервис перед UnitSk
 
     public void SetAutocast(int autocastSkill)
     {
-        if (autoCastIndexes.Contains(autocastSkill))
-            autoCastIndexes.Remove(autocastSkill);
-        else
-            autoCastIndexes.Add(autocastSkill);
+        if (Storage.ActiveSkills[autocastSkill] != null)
+        {
+            if (autoCastIndexes.Contains(autocastSkill))
+            {
+                autoCastIndexes.Remove(autocastSkill);
+            }
+            else
+            {
+                autoCastIndexes.Add(autocastSkill);
+            }
+        }
     }
 
     public void StopUse(int index)

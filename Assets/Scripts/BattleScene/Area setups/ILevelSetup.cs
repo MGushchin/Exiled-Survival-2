@@ -8,7 +8,7 @@ public interface ILevelSetup
     public GameObject selfObject { get; }
     public void InitSetup(Tilemap walkable, Tilemap blockable);
 
-    public MapData Setup(int size, float noise);
+    public MapData Setup(int size, float noise, float decorationsPercent);
 
     public MapData SetupRandomly(int width, int height);
 }

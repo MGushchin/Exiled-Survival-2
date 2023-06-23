@@ -17,7 +17,7 @@ public class PlayerInputControl : MonoBehaviour
     public UnityEvent OnOpenMenu = new UnityEvent();
     public UnityEvent OnOpenLevelUp = new UnityEvent(); //Переписать привязчку через UnityEvents
 
-    private PlayerInput input;
+    //private PlayerInput input;
     public KeyCode[] SkillsButtons = new KeyCode[5] { KeyCode.Mouse0, KeyCode.Mouse1, KeyCode.Q, KeyCode.E, KeyCode.R};
     [SerializeField]
     private KeyCode autoCastButton = KeyCode.LeftAlt;
@@ -26,31 +26,39 @@ public class PlayerInputControl : MonoBehaviour
     [SerializeField]
     public KeyCode LevelUpButton = KeyCode.Tab;
 
-    private void Awake()
-    {
-        input = new PlayerInput();
-    }
+    private bool inGameControl = true;
 
-    private void OnEnable()
-    {
-        input.Enable();
-    }
+    //public static Vector3 CurrentCastPosition
+    //{
+    //    get
+    //    {
+    //        Vector3 mousePosition = Input.mousePosition;
+    //        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+    //        mousePosition.z = 0;
+    //        return mousePosition;
+    //    }
+    //}
 
-    private void OnDisable()
+
+    public void SetInGameControl(bool value)
     {
-        input.Disable();
+        inGameControl = value;
     }
 
     private void Update()
     {
-        Vector3 mousePosition = Input.mousePosition; 
-        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition); 
-        mousePosition.z = 0; 
+        Vector3 mousePosition = Input.mousePosition;
+        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        mousePosition.z = 0;
         //Main logic
-        movementLogic();
-        mouseLogic(mousePosition);
-        skillActivationsLogic(mousePosition);
-        autoCastButtonsLogic();
+        if (inGameControl)
+        {
+            movementLogic();
+            mouseLogic(mousePosition);
+            skillActivationsLogic(mousePosition);
+            autoCastButtonsLogic();
+        }
+        //Utility control
         if (Input.GetKeyDown(menuButton))
             OnOpenMenu.Invoke();
         if (Input.GetKeyDown(LevelUpButton))

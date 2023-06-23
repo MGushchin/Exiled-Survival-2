@@ -46,6 +46,10 @@ public class DynamicSkillsDisplayPanel : MonoBehaviour
                 float cooldownTime = (player.SkillsActivation.Storage.ActiveSkills[i].Cooldown * 100 / player.SkillsActivation.Storage.ActiveSkills[i].SkillCooldown);
                 Cells[i].SetCooldownData(cooldownTime);
                 Cells[i].SetSkillImage(player.SkillsActivation.Storage.ActiveSkills[i].SkillIcon);
+
+                if(player.SkillsActivation.autoCastIndexes.Contains(i) != Cells[i].Auto) //Переписать
+                    Cells[i].SetAuto(player.SkillsActivation.autoCastIndexes.Contains(i));
+
             }
             else
             {

@@ -18,7 +18,6 @@ public class DefaultMeleeAttackSkill : Skill
     #region UtilityLinks
     private float resultCooldownRecoverySpeed => (1 / owner.Stats.GetAdvancedStat(StatTag.CooldownRecovery).Value);
     private float resultSkillCooldown => baseSkillCooldown * (1 / (owner.Stats.GetAdvancedStat(StatTag.CooldownRecovery).Value)); // Добавить модификатор скорости атаки
-    private float attackRange => owner.Stats.GetStat(StatTag.AttackRange);
     #endregion
 
     public override void InitSKill(UnitActions skillOwner)
@@ -29,6 +28,8 @@ public class DefaultMeleeAttackSkill : Skill
         attackHit = hit.GetComponent<Hit>();
         attackHit.OnFeedbackReceived.AddListener(owner.TakeHitFeedback);
         attackHit.SetActiveHit(false);
+        hit.transform.localScale = new Vector3(hit.transform.localScale.x * owner.Stats.GetStat(StatTag.AreaOfEffect), hit.transform.localScale.y * owner.Stats.GetStat(StatTag.AreaOfEffect), 1);
+        owner.Stats.OnStatChanged[StatTag.AreaOfEffect].AddListener(OnAreaOfEffectChanges);
         cooldown = 0;
         skillCooldown = resultSkillCooldown;
     }
@@ -65,8 +66,14 @@ public class DefaultMeleeAttackSkill : Skill
     {
         base.RemoveSkill();
         attackHit.OnFeedbackReceived.RemoveListener(owner.TakeHitFeedback);
+        owner.Stats.OnStatChanged[StatTag.AreaOfEffect].RemoveListener(OnAreaOfEffectChanges);
         StopCoroutine(attackCoroutine);
         Destroy(attackHit.gameObject);
+    }
+
+    private void OnAreaOfEffectChanges(float value)
+    {
+        attackHit.transform.localScale = new Vector3(attackHit.transform.localScale.x * owner.Stats.GetStat(StatTag.AreaOfEffect), attackHit.transform.localScale.y * owner.Stats.GetStat(StatTag.AreaOfEffect), 1);
     }
 
     private IEnumerator attackTimeDelay()

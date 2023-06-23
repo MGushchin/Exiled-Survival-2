@@ -221,7 +221,7 @@ public class StatusStorage : MonoBehaviour
     private UnitActions owner;
     private bool active = false;
     private IEnumerator updateCoroutine;
-    private float updateTime = 0.25f;
+    //private float updateTime = 0.25f;
     private Dictionary<StatusType, statusExecuter> activeStatuses = new Dictionary<StatusType, statusExecuter>();
     [SerializeField]
     private List<Status> poisonStatus = new List<Status>(); //Debug

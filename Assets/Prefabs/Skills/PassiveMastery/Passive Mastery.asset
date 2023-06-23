@@ -18,6 +18,8 @@ MonoBehaviour:
   maximumLevel: 100
   level: 0
   rarity: 0
+  tags: 
+  weight: 100
   baseMod: 1
   Values: []
   SkillsModsRequirements: []

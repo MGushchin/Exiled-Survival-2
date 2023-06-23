@@ -195,9 +195,9 @@ public class Fireball : Skill
         }
     }
 
-    public override void ApplyUpgrade(string name, int level)
+    public override void ApplyUpgrade(SkillMod mod)
     {
-        switch (name)
+        switch (mod.name)
         {
             case ("Fireball Damage"):
                 {

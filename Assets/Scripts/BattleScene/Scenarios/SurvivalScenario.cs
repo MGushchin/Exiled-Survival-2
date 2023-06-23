@@ -38,10 +38,12 @@ public class SurvivalScenario : MonoBehaviour
     public void StartScenario(int stage)
     {
         active = true;
+
         #region Debug
         //bossCount = 1;
         //bossSpawnTime = 10;
         #endregion
+
         spawnCoroutine = spawnUpdate();
         difficultyCoroutine = difficultyUpdate();
         bossCoroutine = bossTimer();

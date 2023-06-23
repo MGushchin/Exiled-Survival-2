@@ -10,8 +10,8 @@ public class BattleSceneMenuPanel : MonoBehaviour
         gameObject.SetActive(!gameObject.activeSelf);
         SkillsPanel.SetEditMode(gameObject.activeSelf);
         if (gameObject.activeSelf)
-            GameTimeController.PauseGame();
+            GameTimeController.instance.PauseGame();
         else
-            GameTimeController.ResumeGame();
+            GameTimeController.instance.ResumeGame();
     }
 }

@@ -61,9 +61,16 @@ public class Skill : MonoBehaviour
 
     }
 
-    public virtual void ApplyUpgrade(string name, int level)
+    public virtual void ApplyUpgrade(SkillMod mod)
     {
         baseSkillMod.UpgradeLevel();
+    }
+
+    protected virtual HitData getHitData(float baseCriticalStrikeChance, List<StatTag> skillTags)
+    {
+        HitData hit = owner.Stats.GetHitData(baseCriticalStrikeChance, skillTags);
+        hit.HitSender = owner;
+        return hit;
     }
 
 }
