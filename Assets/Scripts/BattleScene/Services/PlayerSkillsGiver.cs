@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -233,6 +234,8 @@ public class PlayerSkillsGiver : MonoBehaviour
             mod.ParentSkill.BaseSkillMod.UpgradeLevel();
             checkAllSkillRequirements();
         }
+        else
+            Debug.LogWarning("LearnSkillMod Key exception");
         OnChange.Invoke();
     }
 

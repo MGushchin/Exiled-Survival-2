@@ -13,7 +13,7 @@ public class EnemySpawn : MonoBehaviour
         this.player = player;
     }
 
-    public void SpawnModAroundPlayer(Rarities rarity)
+    public UnitActions SpawnModAroundPlayer(Rarities rarity)
     {
         UnitActions enemy;
         switch(rarity)
@@ -41,6 +41,7 @@ public class EnemySpawn : MonoBehaviour
                 break;
         }
         initUnit(enemy);
+        return enemy;
     }
 
     public UnitActions SpawnBossAroundPlayer()

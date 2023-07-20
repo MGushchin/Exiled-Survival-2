@@ -38,8 +38,8 @@ public class AttackMastery : Skill
     public override void RemoveSkill()
     {
         base.RemoveSkill();
-        if (canDealRuthless)
-            owner.Stats.OnPreparingHit.RemoveListener(RuthlessHitsCount);
+        //if (canDealRuthless)
+        //    owner.Stats.OnPreparingHit.RemoveListener(RuthlessHitsCount);
     }
 
 
@@ -68,7 +68,7 @@ public class AttackMastery : Skill
             case ("Ruthless hits"):
                 {
                     canDealRuthless = true;
-                    owner.Stats.OnPreparingHit.AddListener(RuthlessHitsCount);
+                    //owner.Stats.OnPreparingHit.AddListener(RuthlessHitsCount);
                 }
                 break;
             case ("Attack Vampirism"):

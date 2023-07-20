@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Statuses;
+using Unity.VisualScripting;
 
 public class Dash : Skill
 {
@@ -18,7 +19,7 @@ public class Dash : Skill
 
     //Utility Params
     private float dashTime = 0.25f;
-    private float dashForce = 200;
+    private float dashForce = 250; //162 ~ 1 unit
 
     #region UtilityLinks
     private float resultSkillCooldown => baseSkillCooldown * (1 / (owner.Stats.GetAdvancedStat(StatTag.CooldownRecovery).ModValueWithAddedParams(cooldownModifier)));
@@ -77,6 +78,8 @@ public class Dash : Skill
     private IEnumerator dashing()
     {
         float dashTimer = dashTime;
+        Vector3 startPos = transform.position;
+        owner.Movement.SetMove(false);
         while (dashTimer > 0)
         {
             Vector3 force = Vector3.Normalize(owner.Movement.CurrentMoveDirection);
@@ -85,6 +88,7 @@ public class Dash : Skill
             yield return new WaitForFixedUpdate();
             dashTimer -= Time.fixedDeltaTime;
         }
+        owner.Movement.SetMove(true);
         ownerRb.velocity = new Vector2(0, 0);
         trail.enabled = false;
     }

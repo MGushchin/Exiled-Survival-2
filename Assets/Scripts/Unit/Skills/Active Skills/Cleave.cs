@@ -1,3 +1,5 @@
+using Statuses;
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +12,7 @@ public class Cleave : Skill
         public DisappearingDelay Delay;
         public SkillSkinChanger skinChanger;
         public SpriteRenderer Renderer;
+        public HitTimeMultiplierSetter HitTime;
     }
     public GameObject HitPrefab;
     private Transform selfTransform;
@@ -19,11 +22,10 @@ public class Cleave : Skill
     private IEnumerator cooldownCoroutine;
 
     #region SkillParams
-    private CombinedStat damageModifier = new CombinedStat(5, 0, new List<float>());
-    private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
+    //private CombinedStat damageModifier = new CombinedStat(5, 0, new List<float>());
+    //private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
     private CombinedStat areaOfEffectModifier = new CombinedStat(3, 0, new List<float>());
     private float baseSkillCooldown = 1;
-    private float baseCriticalStrikeChance = 5;
     private float multistrikeChance = 0;
     //Ailments section
 
@@ -44,9 +46,10 @@ public class Cleave : Skill
         selfTransform = gameObject.transform;
         skillCooldown = resultSkillCooldown;
         cooldown = 0;
-
+        damageModifier = new CombinedStat(100, 0, new List<float>());
+        attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
         //Init methods
-        skillTags = new List<StatTag>() { StatTag.AttackDamage, StatTag.PhysicalDamage, StatTag.AreaDamage };
+        hitTags = new List<StatTag>() { StatTag.AttackDamage, StatTag.PhysicalDamage, StatTag.AreaDamage };
         updateHitPool();
         updateAreaOfEffectPool(1);
         updateAttackSpeedPool(1);
@@ -86,20 +89,54 @@ public class Cleave : Skill
             return false;
     }
 
-    protected override HitData getHitData(float baseCriticalStrikeChance, List<StatTag> skillTags)
+    protected override HitData getHitData()
     {
-        HitData hit = base.getHitData(baseCriticalStrikeChance, skillTags);
-        hit.PhysicalDamage = damageModifier.ValueWithAddedParams(hit.PhysicalDamage);
-        hit.FireDamage *= damageModifier.ModValue;
-        hit.ColdDamage *= damageModifier.ModValue;
-        hit.LightningDamage *= damageModifier.ModValue;
+        #region StatsMethod
+        HitData hit = new HitData(owner);
+        hit.Ally = owner.Ally;
+        CombinedModStat modStat = new CombinedModStat();
+        modStat.AddIncreaseValue(owner.Stats.GetAdvancedStat(StatTag.damage).IncreaseValue);
+        modStat.AddMoreValue(owner.Stats.GetAdvancedStat(StatTag.damage).MoreValue);
+
+        foreach (StatTag tag in hitTags)
+        {
+            modStat.AddIncreaseValue(owner.Stats.GetAdvancedStat(tag).IncreaseValue);
+            modStat.AddMoreValue(owner.Stats.GetAdvancedStat(tag).MoreValues);
+        }
+
+        hit.PhysicalDamage = owner.Stats.GetAdvancedStat(StatTag.PhysicalDamage).ValueWithAddedParams(modStat.Value) * damageMultiplier;//Переписать
+        hit.FireDamage = owner.Stats.GetAdvancedStat(StatTag.FireDamage).ValueWithAddedParams(modStat.Value) * damageMultiplier;//Переписать
+        hit.ColdDamage = owner.Stats.GetAdvancedStat(StatTag.ColdDamage).ValueWithAddedParams(modStat.Value) * damageMultiplier;//Переписать
+        hit.LightningDamage = owner.Stats.GetAdvancedStat(StatTag.LightningDamage).ValueWithAddedParams(modStat.Value) * damageMultiplier;//Переписать
+        hit.CriticalStrikeChance = owner.Stats.GetAdvancedStat(StatTag.CriticalStrikeChance).ValueWithAddedParams(criticalStrikeChanceModifier); //Переписать
+        hit.CriticalStrikeMultiplier = owner.Stats.GetAdvancedStat(StatTag.CriticalStrikeMultiplier).Value;
+
+        if (owner.Stats.GetAdvancedStat(StatTag.BleedingChance).Value > 0) //Bleeding
+        {
+            int garantedStacks = (int)(owner.Stats.GetAdvancedStat(StatTag.BleedingChance).Value / 100);
+            int stacksCount = garantedStacks;
+            if (Random.Range(1, 100f) <= (owner.Stats.GetAdvancedStat(StatTag.BleedingChance).Value - garantedStacks * 100))
+            {
+                stacksCount++;
+            }
+            for (int i = 0; i < stacksCount; i++)
+            {
+                //Bleeding
+                Status status = new Status(StatusType.Bleeding, owner.Stats.GetAdvancedStat(StatTag.BleedingDuration).Value, (int)owner.Stats.GetAdvancedStat(StatTag.BleedingDamage).Value); //sender исправить, int преобразование
+                status.damage = owner.Stats.GetAdvancedStat(StatTag.BleedingDamage).Value;
+                hit.InflicktedStatuses.Add(owner.Stats.GetStatus(StatusType.Bleeding)); //Ограничить по шансу и статусу
+            }
+        }
+        #endregion
+
+        hit.Tags = skillTags;
         return hit;
     }
 
     private List<skillHit> setupHit(Vector3 castPoint, List<skillHit> hits)
     {
         //Setup
-        HitData hit = getHitData(baseCriticalStrikeChance, skillTags);
+        HitData hit = getHitData();
         float offsetMagnitude = resultAreaOfEffect / 2;
         bool flip = true;
         if (Random.Range(0, 2) == 0)
@@ -116,6 +153,7 @@ public class Cleave : Skill
             hits[i].hit.SetHit(hit);
             hits[i].Renderer.flipY = flip;
             flip = !flip;
+            hits[i].HitTime.SetHitAnimationTime(skillCooldown / 2);
             hits[i].hit.SetActiveHit(true);
         }
         return hits;
@@ -133,6 +171,7 @@ public class Cleave : Skill
             temporalHit.skinChanger = temporal.GetComponent<SkillSkinChanger>();
             temporalHit.Delay = temporal.GetComponent<DisappearingDelay>();
             temporalHit.Renderer = temporal.GetComponent<SpriteRenderer>();
+            temporalHit.HitTime = temporal.GetComponent<HitTimeMultiplierSetter>();
             temporalHit.hit.OnFeedbackReceived.AddListener(owner.TakeHitFeedback);
             hitsPool.Enqueue(temporalHit);
             temporal.SetActive(false);
@@ -193,7 +232,7 @@ public class Cleave : Skill
         {
             case ("Cleave Damage"):
                 {
-                    damageModifier.AddIncreaseValue(10);
+                    damageModifier.AddBaseValue(10);
                 }
                 break;
             case ("Cleave Attack Speed"):

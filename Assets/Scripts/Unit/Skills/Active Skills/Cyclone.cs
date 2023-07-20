@@ -67,9 +67,10 @@ public class Cyclone : Skill
             return false;
     }
 
-    private HitData getHitData()
+    protected override HitData getHitData()
     {
-        HitData hit = owner.Stats.GetHitData(baseCriticalStrikeChance, new List<StatTag>());
+        Debug.LogError("Not refactored code");
+        HitData hit = owner.Stats.GetHitData();
         hit.PhysicalDamage *= damageModifier.ModValue;
         return hit;
     }

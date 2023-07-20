@@ -20,13 +20,14 @@ public class HitData
     }
     public UnitActions HitSender;
     public float PhysicalDamage;
-    public float CriticalStrikeChance;
+    public float CriticalStrikeChance; //Возможно переписать
     public float CriticalStrikeMultiplier;
     public float FireDamage;
     public float ColdDamage;
     public float LightningDamage;
     public bool Ally;
     public List<Status> InflicktedStatuses = new List<Status>();
+    public List<SkillTag> Tags = new List<SkillTag>();
 }
 
 [System.Serializable]
@@ -52,6 +53,8 @@ public class HitFeedback
     public bool KillingBlow;
     public bool IsCritical;
     public float DamageDealth;
+    public UnitActions hitTaker;
+    public Vector3 hitPosition;
 }
 
 public class Hit : MonoBehaviour
@@ -91,7 +94,8 @@ public class Hit : MonoBehaviour
             if(unit.Ally != data.Ally)
             {
                 HitFeedback feedback;
-                feedback = unit.TakeDamage(data);
+                Vector3 collisionPoint = other.ClosestPoint(transform.position);
+                feedback = unit.TakeDamage(data, collisionPoint);
                 OnFeedbackReceived.Invoke(feedback);
                 OnHit.Invoke(SelfTransform.position);
             }

@@ -38,7 +38,7 @@ namespace UIMarkers
 
         private void OnBecameInvisible()
         {
-            if (marker == null)
+            if (marker == null && gameObject.activeSelf)
                 marker = mainSystem.Register(selfTransform, type);
         }
 

@@ -37,7 +37,8 @@ public class HitMasterSlave : Hit
                 if (unit.Ally != data.Ally)
                 {
                     HitFeedback feedback;
-                    feedback = unit.TakeDamage(data);
+                    Vector3 collisionPoint = other.ClosestPoint(transform.position);
+                    feedback = unit.TakeDamage(data, collisionPoint);
                     OnFeedbackReceived.Invoke(feedback);
                     OnHit.Invoke(SelfTransform.position);
                 }

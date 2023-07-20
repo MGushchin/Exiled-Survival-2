@@ -12,7 +12,7 @@ public class SurvivalScenario : MonoBehaviour
     private float timer = 0;
     private float difficultyTimer = 60;
     private float difficultyRaiseTime = 60;
-    private float spawnRate = 2;
+    private float spawnRate = 1;
     private float spawnRateLimit = 10;
     private float magicMobChance = 0;
     private float rareMobChance = 0;
@@ -27,12 +27,19 @@ public class SurvivalScenario : MonoBehaviour
     IEnumerator difficultyCoroutine;
     IEnumerator bossCoroutine;
     #endregion
+    #region UnitsCounting
+    private List<UnitActions> aliveUnits = new List<UnitActions>();
+    private int killCount = 0;
+    #endregion
 
     public void InitScenario(MapData map, EnemySpawn spawner, Transform player)
     {
         this.map = map;
         this.spawner = spawner;
         this.player = player;
+        StatisticsDisplay.instance.RegisterData("KillCount", "Kills: " + killCount);
+        StatisticsDisplay.instance.RegisterData("BossSpawnTime", "Boss spawn: " + bossSpawnTime);
+        StatisticsDisplay.instance.RegisterData("BossKillCount", "Boss killed: " + defeatedBosses + "/" + bossCount);
     }
 
     public void StartScenario(int stage)
@@ -91,7 +98,15 @@ public class SurvivalScenario : MonoBehaviour
 
     private IEnumerator bossTimer()
     {
-        yield return new WaitForSeconds(bossSpawnTime);
+        float bossSpawnTimer = bossSpawnTime;
+        while (bossSpawnTime > 0)
+        {
+            yield return new WaitForSeconds(1);
+            bossSpawnTimer -= 1;
+            StatisticsDisplay.instance.UpdateStat("BossSpawnTime", "Boss spawn: " + bossSpawnTimer);
+        }
+        //yield return new WaitForSeconds(bossSpawnTime);
+            
         spawnBoss();
         spawnedBosses++;
         afterBossSpawn();
@@ -121,7 +136,9 @@ public class SurvivalScenario : MonoBehaviour
         }
         else
             rarity = Rarities.Common;
-        spawner.SpawnModAroundPlayer(rarity);
+        UnitActions spawnedUnit = spawner.SpawnModAroundPlayer(rarity);
+        spawnedUnit.OnDeath.AddListener(OnUnitDeath);
+        aliveUnits.Add(spawnedUnit);
     }
 
     private void spawnBoss()
@@ -141,8 +158,16 @@ public class SurvivalScenario : MonoBehaviour
     {
         defeatedBosses++;
         spawnedBosses--;
+        StatisticsDisplay.instance.UpdateStat("BossKillCount", "Boss killed: " + defeatedBosses + "/" + bossCount);
         boss.OnDeath.RemoveListener(OnBossDeath);
         if (defeatedBosses == bossCount)
             Debug.Log("Winning");
+    }
+
+    public void OnUnitDeath(UnitActions unit)
+    {
+        killCount++;
+        aliveUnits.Remove(unit);
+        StatisticsDisplay.instance.UpdateStat("KillCount", "Kills: " + killCount);
     }
 }

@@ -79,9 +79,10 @@ public class Fireball : Skill
 
     private List<HitData> getHitData()
     {
+        Debug.LogError("Not refactored code");
         List<HitData> hits = new List<HitData>();
-        HitData projectileHit = owner.Stats.GetHitData(baseCriticalStrikeChance, new List<StatTag> { StatTag.ProjectileDamage });
-        HitData explosionHit = owner.Stats.GetHitData(baseCriticalStrikeChance, new List<StatTag> { StatTag.AreaDamage });
+        HitData projectileHit = owner.Stats.GetHitData();
+        HitData explosionHit = owner.Stats.GetHitData();
         //Projectile
         projectileHit.PhysicalDamage *= damageModifier.ModValue * projectileDamageModifier.ModValue; //Переписать бы
         //projectileHit.FireDamage *= damageModifier.ModValue * projectileDamageModifier.ModValue; //Переписать бы

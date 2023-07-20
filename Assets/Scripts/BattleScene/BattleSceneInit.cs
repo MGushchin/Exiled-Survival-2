@@ -24,11 +24,15 @@ public class BattleSceneInit : MonoBehaviour
         //Marker system init
         MarkerSystem.instance.Init(playerGameObject.transform, MainCanvas.transform);
 
+        //Map data
+        GlobalData.instance.LevelData.CreateNewLevelData(1); //Переписать
+
         //Arena generation
         AreaSetup.SetupLevel();
 
         //Adding scenario and his services
         sceneData = new GameObject();
+        sceneData.name = "Scenario holder";
         SurvivalScenario scenario = sceneData.AddComponent<SurvivalScenario>();
         AreaSetup.Spawner.CreatePool(); // Создание пула у фабрики
         spawnSystem = sceneData.AddComponent<EnemySpawn>(); // Добавление системы спавна
@@ -36,11 +40,10 @@ public class BattleSceneInit : MonoBehaviour
         scenario.InitScenario(GlobalData.instance.LevelData.Map, spawnSystem, GlobalData.instance.PlayerData.Player.transform);
 
         //Start scenario
-        GlobalData.instance.LevelData.CreateNewLevelData(1); //Переписать
         scenario.StartScenario(1); //Запускаем сценарий и запускаем стадию 1
 
         //Timer set
-        Statistics.SetTimer(true);
+        //Statistics.SetTimer(true);
     }
 
 }

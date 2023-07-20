@@ -27,6 +27,9 @@ public class UnitActions : MonoBehaviour
     public UnityEvent<float, float> OnExperienceChanged = new UnityEvent<float, float>(); //перенести бары
     [HideInInspector]
     public UnityEvent<float, Vector3> OnTakingDamage = new UnityEvent<float, Vector3>();
+    [HideInInspector]
+    public UnityEvent HitDealth = new UnityEvent();
+
     //Valuebars
     public Valuebar LifeValue;
     public bool Ally => Stats.Ally;
@@ -71,7 +74,7 @@ public class UnitActions : MonoBehaviour
         recoveringCoroutine = recovering(); //Возможно перенос в Start()
         StartCoroutine(recoveringCoroutine); //Возможно перенос в Start()
         //Status.Init(this);
-        Status.SetActive(true); //Возможно перенос в Start()
+        /*Status.SetActive(true); *///Возможно перенос в Start()
         #endregion
     }
 
@@ -129,6 +132,8 @@ public class UnitActions : MonoBehaviour
     public HitFeedback TakeDamage(HitData hit)
     {
         HitFeedback feedback = new HitFeedback();
+        feedback.hitTaker = this;
+        feedback.hitPosition = selfTransform.position;
         float damage = hit.PhysicalDamage + hit.FireDamage + hit.ColdDamage + hit.LightningDamage;
         if (Random.Range(0, 100) <= hit.CriticalStrikeChance)
         {
@@ -140,6 +145,39 @@ public class UnitActions : MonoBehaviour
             TakeStatus(status, hit.HitSender);
         float stunDuration = Mathf.Clamp(damage * 100 / Stats.GetStat(StatTag.life) / 100 / 2, 0, 1);
         if(stunDuration > 0.1)
+        {
+            stunningCoroutine = stunning(stunDuration);
+            StartCoroutine(stunningCoroutine);
+        }
+        LifeValue.AddValue(-damage); //Минус
+        feedback.DamageDealth = damage;
+        if (LifeValue.Value == 0)
+        {
+            feedback.KillingBlow = true;
+            Death();
+        }
+
+        OnTakingDamage.Invoke(damage, selfTransform.position);
+
+        return feedback;
+    }
+
+    public HitFeedback TakeDamage(HitData hit, Vector3 hitPosition)
+    {
+        HitFeedback feedback = new HitFeedback();
+        feedback.hitTaker = this;
+        feedback.hitPosition = hitPosition;
+        float damage = hit.PhysicalDamage + hit.FireDamage + hit.ColdDamage + hit.LightningDamage;
+        if (Random.Range(0, 100) <= hit.CriticalStrikeChance)
+        {
+            damage *= (hit.CriticalStrikeMultiplier / 100);
+            feedback.IsCritical = true;
+        }
+        damage *= 1 - MechanicsCalc.CalculateDamageReduction(damage, Stats.GetStat(StatTag.Armour));
+        foreach (Status status in hit.InflicktedStatuses)
+            TakeStatus(status, hit.HitSender);
+        float stunDuration = Mathf.Clamp(damage * 100 / Stats.GetStat(StatTag.life) / 100 / 2, 0, 1);
+        if (stunDuration > 0.1)
         {
             stunningCoroutine = stunning(stunDuration);
             StartCoroutine(stunningCoroutine);
@@ -187,6 +225,7 @@ public class UnitActions : MonoBehaviour
     public void TakeHitFeedback(HitFeedback feedback)
     {
         //Debug.Log(gameObject.name + ": Received hit feedback " + feedback.DamageDealth + " " + feedback.KillingBlow);
+        HitDealth.Invoke();
         float vampirismInstance = feedback.DamageDealth * Stats.GetStat(StatTag.LifeLeech) / 100;
         recovery.AddVampirismInstance(vampirismInstance);
     }

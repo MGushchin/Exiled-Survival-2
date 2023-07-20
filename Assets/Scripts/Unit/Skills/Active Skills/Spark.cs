@@ -74,9 +74,10 @@ public class Spark : Skill
             return false;
     }
 
-    private HitData getHitData()
+    protected override HitData getHitData()
     {
-        HitData hit = owner.Stats.GetHitData(baseCriticalStrikeChance, new List<StatTag> { StatTag.ProjectileDamage });
+        Debug.LogError("Not refactored code");
+        HitData hit = owner.Stats.GetHitData();
         hit.PhysicalDamage *= damageModifier.ModValue; //Переписать бы
         //hit.FireDamage *= damageModifier.ModValue; //Переписать бы
         //hit.ColdDamage *= damageModifier.ModValue; //Переписать бы

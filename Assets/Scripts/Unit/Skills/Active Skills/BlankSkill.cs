@@ -17,10 +17,7 @@ public abstract class BlankSkill : Skill
     private IEnumerator cooldownCoroutine;
 
     #region SkillParams
-    private CombinedStat damageModifier = new CombinedStat(0, 0, new List<float>());
-    private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
     private float baseSkillCooldown = 1;
-    private float baseCriticalStrikeChance = 5;
     //Ailments section
 
     //Utility Params
@@ -64,10 +61,9 @@ public abstract class BlankSkill : Skill
             return false;
     }
 
-    private HitData getHitData()
+    protected override HitData getHitData()
     {
-        HitData hit = owner.Stats.GetHitData(baseCriticalStrikeChance, new List<StatTag>());
-        hit.PhysicalDamage *= damageModifier.ModValue;
+        HitData hit = base.getHitData();
         return hit;
     }
 
@@ -116,7 +112,6 @@ public abstract class BlankSkill : Skill
 
     public override void ApplyUpgrade(SkillMod mod)
     {
-        //base.ApplyUpgrade(name, level);
         switch (mod.name)
         {
             case ("0"):

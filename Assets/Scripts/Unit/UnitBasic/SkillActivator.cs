@@ -12,6 +12,7 @@ public class SkillActivator : MonoBehaviour //Переписать как сервис перед UnitSk
     //[SerializeField]
     //private List<Skill> skillList = new List<Skill>();
     public List<int> autoCastIndexes = new List<int>();
+    public Vector3 CastPosition => castPosition; //Debug
     private Vector3 castPosition = Vector3.zero;
 
     public void InitSkills()
@@ -66,7 +67,7 @@ public class SkillActivator : MonoBehaviour //Переписать как сервис перед UnitSk
             Storage.ActiveSkills[skillIndex].UseSkill(castPoint);
     }
 
-    public void SetAutocast(int autocastSkill)
+    public void SetAutocast(int autocastSkill) //Добавить булевый параметр
     {
         if (Storage.ActiveSkills[autocastSkill] != null)
         {

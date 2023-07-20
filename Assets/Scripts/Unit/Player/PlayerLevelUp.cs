@@ -9,6 +9,7 @@ public class PlayerLevelUp : MonoBehaviour
     public List<SkillCell> Cells = new List<SkillCell>();
     public GameObject LevelUpPanel;
 
+    private bool learningActiveSkill = false;
     private List<SkillMod> preparedSkillMods = new List<SkillMod>();
     private UnitActions player;
 
@@ -21,10 +22,16 @@ public class PlayerLevelUp : MonoBehaviour
     {
         if (GlobalData.instance.PlayerData.TakeSkillPoint())
         {
-            if(/*player.SkillsActivation.Storage.ActiveSkills.Length < player.SkillsActivation.Storage.SkillSlots && */GlobalData.instance.PlayerData.Level % 2 == 0)
+            if (/*player.SkillsActivation.Storage.ActiveSkills.Length < player.SkillsActivation.Storage.SkillSlots && */GlobalData.instance.PlayerData.Level % 2 == 0)
+            {
                 preparedSkillMods = ActiveSkillGiver.GetWeightedRandomMods(4);
+                learningActiveSkill = true;
+            }
             else
+            {
                 preparedSkillMods = PassiveSkillGiver.GetWeightedRandomMods(4);
+                learningActiveSkill = false;
+            }
             LevelUpPanel.SetActive(true);
             for (int i = 0; i < Cells.Count; i++)
             {
@@ -42,7 +49,10 @@ public class PlayerLevelUp : MonoBehaviour
     public void LearnSkillMod(int index)
     {
         SkillMod mod = preparedSkillMods[index];
-        ActiveSkillGiver.LearnSkillMod(mod.Name);
+        if(learningActiveSkill)
+            ActiveSkillGiver.LearnSkillMod(mod.Name);
+        else
+            PassiveSkillGiver.LearnSkillMod(mod.Name);
         preparedSkillMods.Clear();
         EnableLevelUpPanel(); //Рекурсия, возможно логически переписать
         LevelUpPanel.SetActive(false);

@@ -9,9 +9,16 @@ public class LocationLevelProgression : MonoBehaviour
     private IEnumerator levelUpCoroutine;
     private bool timerStarted = false;
 
+    private void Start()
+    {
+        StatisticsDisplay.instance.RegisterData("AreaLevel", "Area level: " + GlobalData.instance.LevelData.MonsterLevel);
+    }
+
     public void AddLevel(int levelCount)
     {
+        Debug.Log("AddLevel");
         GlobalData.instance.LevelData.AddMonsterLevel(levelCount);
+        StatisticsDisplay.instance.UpdateStat("AreaLevel", "Area level: " + GlobalData.instance.LevelData.MonsterLevel);
     }
 
     public void SetTimerSetting(int levelCount, float frequency)
@@ -41,7 +48,8 @@ public class LocationLevelProgression : MonoBehaviour
     private IEnumerator levelUpUpdate()
     {
         timerStarted = true;
-        while(timerStarted)
+        StatisticsDisplay.instance.UpdateStat("AreaLevel", "Area level: " + GlobalData.instance.LevelData.MonsterLevel);
+        while (timerStarted)
         {
             yield return new WaitForSeconds(levelUpFrequency);
             AddLevel(levelCountPerTick);

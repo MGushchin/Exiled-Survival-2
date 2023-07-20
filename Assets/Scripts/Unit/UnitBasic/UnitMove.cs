@@ -24,6 +24,7 @@ public class UnitMove : MonoBehaviour
     private IEnumerator movingCoroutine;
     public bool IsMoving => move;
     private bool move = false; // Возможно исправить
+    private bool canMove = true;
 
     private void Awake()
     {
@@ -40,29 +41,36 @@ public class UnitMove : MonoBehaviour
 
     public void MoveTo(Vector3 position)
     {
-        LookAt(position);
-        currentTargetPosition = position;
-        movingCoroutine = moving();
-        StartCoroutine(movingCoroutine);
-        Agent.SetDestination(position);
+        if (canMove)//Возможно переписать контроль
+        {
+            LookAt(position);
+            currentMoveDirection = Vector3.Normalize(position - selfTransform.position);
+            currentTargetPosition = position;
+            movingCoroutine = moving();
+            StartCoroutine(movingCoroutine);
+            Agent.SetDestination(position);
+        }
     }
 
     public void Move(Vector3 position)
     {
-        currentMoveDirection = position;
-        position = selfTransform.position + position;
-        LookAt(position);
-        currentTargetPosition = position;
-        //var agentDrift = 0.0001f; // minimal
-        //currentTargetPosition.x += agentDrift; //debug
-        //currentTargetPosition.y += agentDrift;
-        //position.x += agentDrift; //debug
-        //position.y += agentDrift;
-        Agent.SetDestination(position);
-        if (!move)
+        if (canMove)//Возможно переписать контроль
         {
-            movingCoroutine = moving();
-            StartCoroutine(movingCoroutine);
+            currentMoveDirection = position;
+            position = selfTransform.position + position;
+            LookAt(position);
+            currentTargetPosition = position;
+            //var agentDrift = 0.0001f; // minimal
+            //currentTargetPosition.x += agentDrift; //debug
+            //currentTargetPosition.y += agentDrift;
+            //position.x += agentDrift; //debug
+            //position.y += agentDrift;
+            Agent.SetDestination(position);
+            if (!move)
+            {
+                movingCoroutine = moving();
+                StartCoroutine(movingCoroutine);
+            }
         }
     }
 
@@ -71,6 +79,16 @@ public class UnitMove : MonoBehaviour
         StopCoroutine(movingCoroutine);
         move = false;
         Agent.ResetPath();
+    }
+
+    public void SetMove(bool value)
+    {
+        canMove = value;
+        if(!canMove)
+        {
+            Stop();
+        }
+
     }
 
     public void LookAt(Vector3 lookDirection)

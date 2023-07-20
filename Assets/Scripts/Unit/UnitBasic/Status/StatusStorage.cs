@@ -76,12 +76,13 @@ public class StatusStorage : MonoBehaviour
             {
                 float damageMod = owner.Stats.GetTagMods(allStatuses[0].storedStatus.damageTags);
                 int lastIndex = 0;
+
                 for (int i = 0; i < activeStatusesCount; i++, lastIndex++)
                 {
+
                     if (allStatuses[i].storedStatus.Tick(deltaTime))
-                    {
                         statusesToRemove.Add(allStatuses[i]);
-                    }
+
                     DotHitData data = new DotHitData();
                     data.Damage = allStatuses[i].storedStatus.damage * damageMod * deltaTime;
                     HitFeedback feedback = owner.TakeDotDamage(data);
@@ -89,12 +90,11 @@ public class StatusStorage : MonoBehaviour
                         return allStatuses;
                     allStatuses[i].sender.TakeDotFeedback(feedback);
                 }
+
                 for (int i = activeStatusesCount; i < allStatuses.Count; i++) // Переписать это
                 {
                     if (allStatuses[i].storedStatus.Tick(deltaTime))
-                    {
                         statusesToRemove.Add(allStatuses[i]);
-                    }
                 }
             }
             return statusesToRemove;
@@ -172,7 +172,6 @@ public class StatusStorage : MonoBehaviour
             int startI = activeStatusesCount;
             for(int i= startI; i < maximumStacks && i < allStatuses.Count; i++)
             {
-                    Debug.Log("allStatuses.Count < maximumStacks");
                     foreach (Buff buff in allStatuses[i].storedStatus.Buffs)
                     {
                         owner.Stats.AddStat(buff.Tag, buff.Type, buff.Value, allStatuses[i].storedStatus.Type.ToString());
@@ -221,7 +220,7 @@ public class StatusStorage : MonoBehaviour
     private UnitActions owner;
     private bool active = false;
     private IEnumerator updateCoroutine;
-    //private float updateTime = 0.25f;
+    private float updateTime = 0.25f;
     private Dictionary<StatusType, statusExecuter> activeStatuses = new Dictionary<StatusType, statusExecuter>();
     [SerializeField]
     private List<Status> poisonStatus = new List<Status>(); //Debug
@@ -262,37 +261,63 @@ public class StatusStorage : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        active = true;
+        updateCoroutine = statusUpdate();
+        StartCoroutine(updateCoroutine);
+    }
+
     public void SetActive(bool value)
     {
         active = value;
         if (active)
         {
-            //updateCoroutine = update(updateTime);
-            //StartCoroutine(updateCoroutine);
+            updateCoroutine = statusUpdate();
+            StartCoroutine(updateCoroutine);
         }
         else
         {
-            //StopCoroutine(updateCoroutine);
+            StopCoroutine(updateCoroutine);
         }
     }
 
-    private void Update() //Переместить в корутину, но в ней пока не работает
+    //private void Update() //Переместить в корутину, но в ней пока не работает
+    //{
+    //    List<statusWithSender> statusesToRemove = new List<statusWithSender>();
+    //    foreach (statusExecuter executer in activeStatuses.Values)
+    //    {
+    //        statusesToRemove = executer.ExecuteDamageEffects(Time.deltaTime);
+    //        removeStatuses(statusesToRemove);
+    //    }
+    //}
+
+    private void upd(float time) //Переместить в корутину, но в ней пока не работает
     {
         List<statusWithSender> statusesToRemove = new List<statusWithSender>();
         foreach (statusExecuter executer in activeStatuses.Values)
         {
-            statusesToRemove = executer.ExecuteDamageEffects(Time.deltaTime);
+            statusesToRemove = executer.ExecuteDamageEffects(time);
             removeStatuses(statusesToRemove);
         }
     }
 
-    private IEnumerator update(float deltaTime)
+    private IEnumerator statusUpdate()
     {
         while (active)
         {
-            yield return new WaitForSeconds(deltaTime);
+            upd(updateTime);
+            yield return new WaitForSeconds(updateTime);
         }
     }
+
+    //private IEnumerator update(float deltaTime)
+    //{
+    //    while (active)
+    //    {
+    //        yield return new WaitForSeconds(deltaTime);
+    //    }
+    //}
 
     public void AddStatus(Status status, UnitActions sender)
     {

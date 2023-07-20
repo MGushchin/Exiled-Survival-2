@@ -22,6 +22,8 @@ public class CommonEnemyBehaviour : MonoBehaviour
     {
         selfTransform = gameObject.transform;
         Actions.OnDeath.AddListener(Death);
+        //for(int i=0; i < 5; i++) //Переписать
+            //Actions.SkillsActivation.SetAutocast(1);
     }
 
     public void SetActive(bool value)
@@ -54,9 +56,12 @@ public class CommonEnemyBehaviour : MonoBehaviour
             else if(Vector3.Distance(selfTransform.position, currentTarget.transform.position) > attackRange)
             {
                 Actions.MoveToPosition(currentTarget.transform.position);
+                Actions.SkillsActivation.SetCastPoint(currentTarget.transform.position);
+
             } else
             {
-                Actions.Movement.Stop(); 
+                Actions.Movement.Stop();
+                Actions.SkillsActivation.SetCastPoint(currentTarget.transform.position);
                 Actions.UseSkill(currentTarget.transform.position, 0);
                 addedTime += 1 * Actions.Stats.GetStat(StatTag.CooldownRecovery);
                 //addedTime += Actions.Stats.AttackSpeed - updateTime;

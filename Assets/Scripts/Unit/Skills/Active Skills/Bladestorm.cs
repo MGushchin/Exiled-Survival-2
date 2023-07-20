@@ -21,12 +21,12 @@ public class Bladestorm : Skill
     private bool homing = false;
 
     #region SkillParams
-    private CombinedStat damageModifier = new CombinedStat(4, 0, new List<float> { 0.5f }); //50% damage mult
-    private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
+    //private CombinedStat damageModifier = new CombinedStat(4, 0, new List<float> { 0.5f }); //50% damage mult
+    //private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
     private CombinedStat areaOfEffectModifier = new CombinedStat(3, 0, new List<float>());
     private CombinedStat durationModifier = new CombinedStat(3, 0, new List<float>());
-    private float baseSkillCooldown = 3;
-    private float baseCriticalStrikeChance = 5;
+    //private float baseSkillCooldown = 3;
+    //private float baseCriticalStrikeChance = 5;
     private float multistrikeChance = 0;
     //Ailments section
 
@@ -34,7 +34,7 @@ public class Bladestorm : Skill
     #endregion
 
     #region UtilityLinks
-    private float resultSkillCooldown => baseSkillCooldown * (1 / (owner.Stats.GetAdvancedStat(StatTag.CooldownRecovery).ModValueWithAddedParams(attackSpeedModifier)));
+    private float resultSkillCooldown => skillCooldown * (1 / (owner.Stats.GetAdvancedStat(StatTag.CooldownRecovery).ModValueWithAddedParams(attackSpeedModifier)));
     private float resultCooldownRecoverySpeed => (1 / owner.Stats.GetAdvancedStat(StatTag.CooldownRecovery).Value);
     private float resultDuration => durationModifier.Value;
     private float resultAreaOfEffect => areaOfEffectModifier.Value * owner.Stats.GetAdvancedStat(StatTag.AreaOfEffect).ModValue;
@@ -48,10 +48,17 @@ public class Bladestorm : Skill
         skillCooldown = resultSkillCooldown;
         cooldown = 0;
 
+        //Init Skill params
+        damageModifier = new CombinedStat(4, 0, new List<float> { 0.5f }); //4 base damage, 50% damage mult
+        skillCooldown = 3;
+        criticalStrikeChanceModifier = new CombinedStat(5, 0, new List<float>());
+        criticalStrikeMultiplierModifier = new CombinedStat(150, 0, new List<float>());
+
         //Init methods
-        skillTags = new List<StatTag>() { StatTag.AttackDamage, StatTag.PhysicalDamage, StatTag.AreaDamage };
+        hitTags = new List<StatTag>() { StatTag.AttackDamage, StatTag.PhysicalDamage, StatTag.AreaDamage };
         updateHitPool();
         updateAreaOfEffectPool(1);
+
         //Event subscriptions
 
     }
@@ -74,7 +81,7 @@ public class Bladestorm : Skill
             //Self skill setup
             skillCooldown = resultSkillCooldown;
             cooldown = skillCooldown;
-            cooldownCoroutine = cooldownRecovery(baseSkillCooldown * resultCooldownRecoverySpeed);
+            cooldownCoroutine = cooldownRecovery(skillCooldown * resultCooldownRecoverySpeed);
             StartCoroutine(cooldownCoroutine);
 
             //Final operations
@@ -87,16 +94,15 @@ public class Bladestorm : Skill
             return false;
     }
 
-    private HitData getHitData()
+    protected override HitData getHitData(/*float baseCriticalStrikeChance*/)
     {
+        HitData hit = base.getHitData();
         //HitData hit = owner.Stats.GetHitData(baseCriticalStrikeChance, new List<StatTag>());
-        //hit.PhysicalDamage *= damageModifier.ModValue;
-        //return hit;
-        HitData hit = owner.Stats.GetHitData(baseCriticalStrikeChance, new List<StatTag>());
-        hit.PhysicalDamage = damageModifier.ValueWithAddedParams(hit.PhysicalDamage);
-        hit.FireDamage *= damageModifier.ModValue;
-        hit.ColdDamage *= damageModifier.ModValue;
-        hit.LightningDamage *= damageModifier.ModValue;
+        //hit.Tags = skillTags;
+        //hit.PhysicalDamage = damageModifier.ValueWithAddedParams(hit.PhysicalDamage);
+        //hit.FireDamage *= damageModifier.ModValue;
+        //hit.ColdDamage *= damageModifier.ModValue;
+        //hit.LightningDamage *= damageModifier.ModValue;
         return hit;
     }
 

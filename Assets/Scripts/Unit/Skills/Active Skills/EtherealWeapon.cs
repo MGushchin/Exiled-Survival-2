@@ -19,8 +19,8 @@ public class EtherealWeapon : Skill
     private Queue<projectile> projectilesPool = new Queue<projectile>();
     private IEnumerator cooldownCoroutine;
     //Skill Params
-    private CombinedStat damageModifier = new CombinedStat(10, 0, new List<float>());
-    private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
+    //private CombinedStat damageModifier = new CombinedStat(10, 0, new List<float>());
+    //private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
     private CombinedStat projectileCountModifier = new CombinedStat(1, 0, new List<float>());
     private CombinedStat projectileSpeedModifier = new CombinedStat(0, 0, new List<float>());
     private float baseSkillCooldown = 1;
@@ -47,7 +47,7 @@ public class EtherealWeapon : Skill
         cooldown = 0;
         updateProjectilesCount(owner.Stats.GetAdvancedStat(StatTag.ProjectileCount).Value);
         owner.Stats.OnStatChanged[StatTag.ProjectileCount].AddListener(updateProjectilesCount);
-        skillTags = new List<StatTag> { StatTag.ProjectileDamage, StatTag.PhysicalDamage, StatTag.AttackDamage };
+        hitTags = new List<StatTag> { StatTag.ProjectileDamage, StatTag.PhysicalDamage, StatTag.AttackDamage };
     }
 
     public override bool UseSkill(Vector3 castPoint)
@@ -74,8 +74,9 @@ public class EtherealWeapon : Skill
             return false;
     }
 
-    private HitData getHitData()
+    protected override HitData getHitData()
     {
+        Debug.LogError("Not refactored code");
         //HitData hit = owner.Stats.GetHitData(baseCriticalStrikeChance, new List<StatTag> { StatTag.ProjectileDamage });
         //hit.PhysicalDamage *= damageModifier.ModValue; //Переписать бы
         ////hit.FireDamage *= damageModifier.ModValue; //Переписать бы
@@ -84,7 +85,7 @@ public class EtherealWeapon : Skill
         ///*hit.InflicktedStatuses.Add(owner.Stats.GetStatus(StatusType.Poison, owner)); *///Ограничить по шансу и статусу
         ////hit.InflicktedStatuses.Add(new Poison(new List<PoisonInstance> { new PoisonInstance(owner, 1, 2) })); //Debug
         //return hit;
-        HitData hit = owner.Stats.GetHitData(baseCriticalStrikeChance, new List<StatTag>());
+        HitData hit = owner.Stats.GetHitData();
         hit.PhysicalDamage = damageModifier.ValueWithAddedParams(hit.PhysicalDamage);
         hit.FireDamage *= damageModifier.ModValue;
         hit.ColdDamage *= damageModifier.ModValue;
@@ -201,7 +202,7 @@ public class EtherealWeapon : Skill
                 break;
             default:
                 {
-
+                    Debug.LogWarning("Default");
                 }break;
         }
     }

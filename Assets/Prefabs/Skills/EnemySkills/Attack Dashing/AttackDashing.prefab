@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7161000805819917780
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5062619585027406384}
+  - component: {fileID: 2180814173530293162}
+  m_Layer: 0
+  m_Name: AttackDashing
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5062619585027406384
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7161000805819917780}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2180814173530293162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7161000805819917780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59e5f6aacbfbe214abd97f3da31c5890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Attack Dashing
+  skillIcon: {fileID: 21300000, guid: fbbe4f9ef24577f40a1eaf9841de534b, type: 3}
+  SelfTransform: {fileID: 5062619585027406384}
+  activeSkill: 1
+  skillTags: 
+  TrailPrefab: {fileID: 6202536265482306748, guid: e007123968df7214ea5485081af9b88f, type: 3}
+  DangerZonePrefab: {fileID: 8145439478474613490, guid: 27e35d8c5ef120f4191f85082876056e, type: 3}
+  HitZonePrefab: {fileID: 8545790066418678883, guid: 889161bdb18acf94b8e4b55c0f51e12d, type: 3}

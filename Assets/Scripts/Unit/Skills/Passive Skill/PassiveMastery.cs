@@ -56,12 +56,14 @@ namespace Skills
 
         public override void ApplyUpgrade(SkillMod mod)
         {
+            Debug.Log("ApplyUpgrade " + mod.name);
             foreach(Affix affix in mod.Affixes)
             {
+                Debug.Log("Affix " + affix.Tag + " " + affix.ModType + " " + affix.Value);
                 affixes.Add(affix);
                 owner.Stats.AddStat(affix.Tag, affix.ModType, affix.Value);
             }
-            switch (mod.name)
+            switch (mod.Name)
             {
                 //case ("Maximum Life"):
                 //    {

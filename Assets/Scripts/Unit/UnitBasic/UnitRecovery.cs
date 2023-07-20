@@ -21,8 +21,12 @@ public class UnitRecovery
 
     public void Update(float deltaTime)
     {
+        //if (owner.Stats.GetStat(StatTag.lifeRegeneration) * deltaTime != 0)
+            //Debug.Log("Recovery " + owner.Stats.GetStat(StatTag.lifeRegeneration) * deltaTime);
         owner.LifeValue.AddValue(owner.Stats.GetStat(StatTag.lifeRegeneration) * deltaTime);
         float recoverAmount = Mathf.Clamp(vampirismRecoveryAmount, 0, owner.LifeValue.MaximumValue * vampirismRecoveryPerSecondMaximum) * deltaTime;
+        if (recoverAmount != 0)
+            Debug.Log("Recover amount" + recoverAmount);
         owner.LifeValue.AddValue(recoverAmount);
         vampirismRecoveryAmount -= recoverAmount;
     }
