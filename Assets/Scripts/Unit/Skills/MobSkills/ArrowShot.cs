@@ -17,6 +17,7 @@ public class ArrowShot : Skill
     //Utility
     private Queue<skillHit> projectilesPool = new Queue<skillHit>();
     private IEnumerator cooldownCoroutine;
+    private IEnumerator shotDelay;
     private VectorDangerZoneRenderer dangerZoneRenderer;
     //Skill Params
     private CombinedStat projectileCountModifier = new CombinedStat(1, 0, new List<float>());
@@ -38,13 +39,12 @@ public class ArrowShot : Skill
     {
         owner = skillOwner;
         selfTransform = gameObject.transform;
-        skillCooldown = resultSkillCooldown;
+        skillCooldown = 1.5f;
         cooldown = 0;
         updateProjectilesCount(owner.Stats.GetAdvancedStat(StatTag.ProjectileCount).Value);
         dangerZoneRenderer = Instantiate(DangerZonePrefab, transform).GetComponent<VectorDangerZoneRenderer>();
         owner.Stats.OnStatChanged[StatTag.ProjectileCount].AddListener(updateProjectilesCount);
         hitTags = new List<StatTag> { StatTag.ProjectileDamage, StatTag.PhysicalDamage, StatTag.AttackDamage };
-        skillCooldown = 4;
     }
 
     public override bool UseSkill(Vector3 castPoint)
@@ -58,11 +58,20 @@ public class ArrowShot : Skill
                 projectiles.Add(projectilesPool.Dequeue());
             //Setup Hits
             projectiles = setupProjectiles(castPoint, projectiles);
+            shotDelay = attackTimeDelay(projectiles);
+            StartCoroutine(shotDelay);
             //Self skill setup
+            skillCooldown = resultSkillCooldown;
+            cooldown = skillCooldown;
+
+            dangerZoneRenderer.SetActive(new Vector2(0.1f, Vector3.Magnitude(castPoint - transform.position)), skillCooldown / 3);
+            dangerZoneRenderer.SetRotation(Vector3.Normalize(castPoint - transform.position));
+
             skillCooldown = resultSkillCooldown;
             cooldown = skillCooldown;
             cooldownCoroutine = cooldownRecovery(skillCooldown * resultCooldownRecoverySpeed);
             StartCoroutine(cooldownCoroutine);
+
             //Debug.Log("Cooldown = " + baseSkillCooldown * (1 / (owner.Stats.GetAdvancedStat(StatTag.cooldownRecovery).ValueWithAddedParams(attackSpeedModifier))));
             for (int i = 0; i < projectiles.Count; i++)
                 projectilesPool.Enqueue(projectiles[i]);
@@ -72,10 +81,20 @@ public class ArrowShot : Skill
             return false;
     }
 
-    //private IEnumerator casting()
-    //{
-    //    yield return new WaitForSeconds();
-    //}
+    private IEnumerator attackTimeDelay(List<skillHit> projectiles)
+    {
+        //DangerZone.SetActive(areaOfEffectModifier.Value, cooldown / 3);
+        yield return new WaitForSeconds(skillCooldown / 3);
+        for (int i = 0; i < projectiles.Count; i++)
+        {
+            projectiles[i].hit.SetActiveHit(true);
+        }
+        while (cooldown > 0)
+        {
+            yield return new WaitForEndOfFrame();
+            cooldown -= Time.deltaTime;
+        }
+    }
 
     private List<skillHit> setupProjectiles(Vector3 castPoint, List<skillHit> projectiles)
     {
@@ -91,7 +110,7 @@ public class ArrowShot : Skill
             projectiles[i].hit.SetMaster(master);
             projectiles[i].hit.SetHit(hit);
             projectiles[i].pierce.SetPierce(resultPierceCount);
-            projectiles[i].hit.SetActiveHit(true);
+            //projectiles[i].hit.SetActiveHit(true);
             if (i % 2 == 0)
                 currentDegree = (currentDegree + projectilesDegree) * -1;
             else

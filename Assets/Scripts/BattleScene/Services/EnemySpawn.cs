@@ -44,6 +44,42 @@ public class EnemySpawn : MonoBehaviour
         return enemy;
     }
 
+    public List<UnitActions> SpawnMobPackAroundPlayer(Rarities rarity, int count)
+    {
+        List<UnitActions> enemies = new List<UnitActions>();
+
+        switch (rarity)
+        {
+            case (Rarities.Common):
+                {
+                    for(int i=0; i < count; i++)
+                        enemies.Add(factory.CreateCommonEnemy());
+                }
+                break;
+            case (Rarities.Magic):
+                {
+                    for (int i = 0; i < count; i++)
+                        enemies.Add(factory.CreateMagicEnemy());
+                }
+                break;
+            case (Rarities.Rare):
+                {
+                    for (int i = 0; i < count; i++)
+                        enemies.Add(factory.CreateRareEnemy());
+                }
+                break;
+            default:
+                {
+                    for (int i = 0; i < count; i++)
+                        enemies.Add(factory.CreateCommonEnemy());
+                    Debug.LogWarning("Common exception");
+                }
+                break;
+        }
+        initUnits(enemies);
+        return enemies;
+    }
+
     public UnitActions SpawnBossAroundPlayer()
     {
         UnitActions boss;
@@ -62,6 +98,26 @@ public class EnemySpawn : MonoBehaviour
         unit.OnTakingDamage.AddListener(DamageIndicatorSpawner.instance.IndicateDamage);
 
         return unit;
+    }
+
+    private List<UnitActions> initUnits(List<UnitActions> units)
+    {
+        Vector3 spawnPosition = getSpawnPosition();
+        for(int i=0; i < units.Count; i++)
+        {
+            units[i].gameObject.SetActive(true);
+            units[i].transform.position = spawnPosition;
+            UnitPool.instance.AddToPool(units[i], units[i].Stats.Ally);
+            units[i].Ressurect();
+            units[i].GetComponent<CommonEnemyBehaviour>().SetActive(true); //переписать
+            units[i].OnTakingDamage.AddListener(DamageIndicatorSpawner.instance.IndicateDamage);
+            if (i % 2 == 0)
+                spawnPosition.x += 1;
+            else
+                spawnPosition.y += 1;
+        }
+
+        return units;
     }
 
     private Vector3 getSpawnPosition()

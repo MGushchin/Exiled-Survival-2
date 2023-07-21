@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2460609344550556907
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6437448910336100584}
+  - component: {fileID: 4962687890132521003}
+  m_Layer: 0
+  m_Name: ArrowShotSkill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6437448910336100584
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460609344550556907}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4962687890132521003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460609344550556907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eb5e2e3ddd1aa84a9207b1e284c35f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Arrow Shot
+  skillIcon: {fileID: 21300000, guid: fb1e48043961d8f44948225f539a83bb, type: 3}
+  SelfTransform: {fileID: 6437448910336100584}
+  activeSkill: 1
+  skillTags: 
+  ProjectilePrefab: {fileID: 3740492642150714354, guid: f8226895ab9b5f140854352f38735999, type: 3}
+  DangerZonePrefab: {fileID: 8145439478474613490, guid: 27e35d8c5ef120f4191f85082876056e, type: 3}

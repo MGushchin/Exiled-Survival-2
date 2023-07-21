@@ -16,7 +16,7 @@ public class SurvivalScenario : MonoBehaviour
     private float spawnRateLimit = 10;
     private float magicMobChance = 0;
     private float rareMobChance = 0;
-    private float bossSpawnTime = 60;
+    private float bossSpawnTime = 300;
     #region Boss counting
     private int defeatedBosses = 0;
     private int bossCount = 3;
@@ -26,10 +26,17 @@ public class SurvivalScenario : MonoBehaviour
     IEnumerator spawnCoroutine;
     IEnumerator difficultyCoroutine;
     IEnumerator bossCoroutine;
+    IEnumerator magicPackCoroutine;
+    IEnumerator rareCoroutine;
     #endregion
     #region UnitsCounting
     private List<UnitActions> aliveUnits = new List<UnitActions>();
     private int killCount = 0;
+    #endregion
+    #region Events
+    float rareMobSpawnTime = 60;
+    float magicPackSpawnTime = 30;
+    int magicPackMobCount = 4;
     #endregion
 
     public void InitScenario(MapData map, EnemySpawn spawner, Transform player)
@@ -57,6 +64,11 @@ public class SurvivalScenario : MonoBehaviour
         StartCoroutine(spawnCoroutine);
         StartCoroutine(difficultyCoroutine);
         StartCoroutine(bossCoroutine);
+        magicPackCoroutine = magicPackTimer();
+        rareCoroutine = rareTimer();
+        StartCoroutine(magicPackCoroutine);
+        StartCoroutine(rareCoroutine);
+
     }
 
     private IEnumerator levelUpdate()
@@ -98,23 +110,55 @@ public class SurvivalScenario : MonoBehaviour
 
     private IEnumerator bossTimer()
     {
-        float bossSpawnTimer = bossSpawnTime;
+        float timer = bossSpawnTime;
         while (bossSpawnTime > 0)
         {
             yield return new WaitForSeconds(1);
-            bossSpawnTimer -= 1;
-            StatisticsDisplay.instance.UpdateStat("BossSpawnTime", "Boss spawn: " + bossSpawnTimer);
+            timer -= 1;
+            StatisticsDisplay.instance.UpdateStat("BossSpawnTime", "Boss spawn: " + timer);
         }
         //yield return new WaitForSeconds(bossSpawnTime);
-            
+
         spawnBoss();
         spawnedBosses++;
         afterBossSpawn();
     }
 
+    private IEnumerator magicPackTimer()
+    {
+        float timer = magicPackSpawnTime;
+
+        while (active)
+        {
+            yield return new WaitForSeconds(1);
+            timer -= 1;
+            if (timer <= 0)
+            {
+                spawnEnemyPack(Rarities.Magic, magicPackMobCount);
+                timer = timer = magicPackSpawnTime;
+            }
+        }
+    }
+
+    private IEnumerator rareTimer()
+    {
+        float timer = bossSpawnTime;
+
+        while (active)
+        {
+            yield return new WaitForSeconds(1);
+            timer -= 1;
+            if (timer <= 0)
+            {
+                spawnEnemy(Rarities.Rare);
+                timer = timer = magicPackSpawnTime;
+            }
+        }
+    }
+
     private void afterBossSpawn()
     {
-        if(spawnedBosses + defeatedBosses < bossCount)
+        if (spawnedBosses + defeatedBosses < bossCount)
         {
             StopCoroutine(bossCoroutine);
             bossCoroutine = bossTimer();
@@ -139,6 +183,25 @@ public class SurvivalScenario : MonoBehaviour
         UnitActions spawnedUnit = spawner.SpawnModAroundPlayer(rarity);
         spawnedUnit.OnDeath.AddListener(OnUnitDeath);
         aliveUnits.Add(spawnedUnit);
+    }
+
+    private void spawnEnemy(Rarities rarity)
+    {
+        UnitActions spawnedUnit = spawner.SpawnModAroundPlayer(rarity);
+        spawnedUnit.OnDeath.AddListener(OnUnitDeath);
+        aliveUnits.Add(spawnedUnit);
+    }
+
+    private void spawnEnemyPack(Rarities rarity, int count)
+    {
+        List<UnitActions> spawnedUnits;
+
+        spawnedUnits = spawner.SpawnMobPackAroundPlayer(rarity, count);
+        foreach (UnitActions spawnedUnit in spawnedUnits)
+        {
+            spawnedUnit.OnDeath.AddListener(OnUnitDeath);
+            aliveUnits.Add(spawnedUnit);
+        }
     }
 
     private void spawnBoss()

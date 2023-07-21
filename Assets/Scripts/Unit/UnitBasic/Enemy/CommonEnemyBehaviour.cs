@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class CommonEnemyBehaviour : MonoBehaviour
 {
-
     public UnitActions Actions;
     [SerializeField]
     private float updateTime = 1;

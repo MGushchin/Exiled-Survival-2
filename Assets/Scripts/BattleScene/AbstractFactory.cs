@@ -51,7 +51,11 @@ public class AbstractFactory: MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             GameObject unit = Instantiate(Prefab);
-            UnitActions action = unit.GetComponent<UnitActions>();
+            UnitActions action;
+            if (unit.GetComponent<UnitRoute>() == null)
+                action = unit.GetComponent<UnitActions>();
+            else
+                action = unit.GetComponent<UnitRoute>().Actions;
             action.InitUnit();
             //action.OnDeath.AddListener(ReturnToCommonPool);
             reserveCommonUnitsPool.Add(action);
@@ -64,10 +68,14 @@ public class AbstractFactory: MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             GameObject unit = Instantiate(Prefab);
-            UnitActions action = unit.GetComponent<UnitActions>();
+            UnitActions action;
+            if (unit.GetComponent<UnitRoute>() == null)
+                action = unit.GetComponent<UnitActions>();
+            else
+                action = unit.GetComponent<UnitRoute>().Actions;
             //Visual
             SpriteRenderer renderer;
-            renderer = action.Animations.GetComponent<SpriteRenderer>(); //Переписать
+            renderer = action.Animations.gameObject.GetComponent<SpriteRenderer>(); //Переписать
             renderer.color = new Color(0, 0, 50);
             unit.transform.localScale = new Vector3(unit.transform.localScale.x * magicUnitsSizeMult, unit.transform.localScale.y * magicUnitsSizeMult, 1);
             //Init
@@ -83,10 +91,14 @@ public class AbstractFactory: MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             GameObject unit = Instantiate(Prefab);
-            UnitActions action = unit.GetComponent<UnitActions>();
+            UnitActions action;
+            if (unit.GetComponent<UnitRoute>() == null)
+                action = unit.GetComponent<UnitActions>();
+            else
+                action = unit.GetComponent<UnitRoute>().Actions;
             //Visual
             SpriteRenderer renderer;
-            renderer = action.Animations.GetComponent<SpriteRenderer>(); //Переписать
+            renderer = action.Animations.gameObject.GetComponent<SpriteRenderer>(); //Переписать
             renderer.color = new Color(153, 153, 0);
             unit.transform.localScale = new Vector3(unit.transform.localScale.x * rareUnitsSizeMult, unit.transform.localScale.y * rareUnitsSizeMult, 1);
             //Init
@@ -102,10 +114,14 @@ public class AbstractFactory: MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             GameObject unit = Instantiate(Prefab);
-            UnitActions action = unit.GetComponent<UnitActions>();
+            UnitActions action;
+            if (unit.GetComponent<UnitRoute>() == null)
+                action = unit.GetComponent<UnitActions>();
+            else
+                action = unit.GetComponent<UnitRoute>().Actions;
             //Visual
             SpriteRenderer renderer;
-            renderer = action.Animations.GetComponent<SpriteRenderer>(); //Переписать
+            renderer = action.Animations.gameObject.GetComponent<SpriteRenderer>(); //Переписать
             renderer.color = new Color(50, 0, 0);
             unit.transform.localScale = new Vector3(unit.transform.localScale.x * bossUnitsSizeMult, unit.transform.localScale.y * bossUnitsSizeMult, 1);
             //Init

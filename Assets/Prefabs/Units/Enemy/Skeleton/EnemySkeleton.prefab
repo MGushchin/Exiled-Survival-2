@@ -695,6 +695,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6517716765667218512, guid: 46e39661e8f04c44ebf21c1f36f85db3, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7425363801537439154, guid: 46e39661e8f04c44ebf21c1f36f85db3, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -765,7 +769,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7425363801537439154, guid: 46e39661e8f04c44ebf21c1f36f85db3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.3
+      value: 0.31
       objectReference: {fileID: 0}
     - target: {fileID: 7425363801537439154, guid: 46e39661e8f04c44ebf21c1f36f85db3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

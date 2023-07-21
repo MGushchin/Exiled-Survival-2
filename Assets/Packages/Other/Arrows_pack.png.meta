@@ -108,10 +108,10 @@ TextureImporter:
       name: Arrows_pack_0
       rect:
         serializedVersion: 2
-        x: 189
-        y: 3549
-        width: 550
-        height: 166
+        x: 413
+        y: 2237
+        width: 166
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -129,10 +129,10 @@ TextureImporter:
       name: Arrows_pack_1
       rect:
         serializedVersion: 2
-        x: 1213
-        y: 3613
-        width: 550
-        height: 166
+        x: 1437
+        y: 2237
+        width: 166
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,10 +150,10 @@ TextureImporter:
       name: Arrows_pack_2
       rect:
         serializedVersion: 2
-        x: 2237
-        y: 3517
-        width: 550
-        height: 166
+        x: 2461
+        y: 2237
+        width: 166
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,10 +171,10 @@ TextureImporter:
       name: Arrows_pack_3
       rect:
         serializedVersion: 2
-        x: 189
-        y: 2525
-        width: 550
-        height: 166
+        x: 3549
+        y: 2237
+        width: 166
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,10 +192,10 @@ TextureImporter:
       name: Arrows_pack_4
       rect:
         serializedVersion: 2
-        x: 1213
-        y: 2589
-        width: 550
-        height: 166
+        x: 317
+        y: 1213
+        width: 166
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,10 +213,10 @@ TextureImporter:
       name: Arrows_pack_5
       rect:
         serializedVersion: 2
-        x: 2237
-        y: 2493
-        width: 550
-        height: 166
+        x: 1341
+        y: 1213
+        width: 166
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,10 +234,10 @@ TextureImporter:
       name: Arrows_pack_6
       rect:
         serializedVersion: 2
-        x: 189
-        y: 1501
-        width: 550
-        height: 166
+        x: 2365
+        y: 1213
+        width: 166
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -255,10 +255,10 @@ TextureImporter:
       name: Arrows_pack_7
       rect:
         serializedVersion: 2
-        x: 1213
-        y: 1565
-        width: 550
-        height: 166
+        x: 3453
+        y: 1213
+        width: 166
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -276,10 +276,10 @@ TextureImporter:
       name: Arrows_pack_8
       rect:
         serializedVersion: 2
-        x: 2237
-        y: 1469
-        width: 550
-        height: 166
+        x: 381
+        y: 189
+        width: 166
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -297,10 +297,10 @@ TextureImporter:
       name: Arrows_pack_9
       rect:
         serializedVersion: 2
-        x: 189
-        y: 413
-        width: 550
-        height: 166
+        x: 1405
+        y: 189
+        width: 166
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -318,10 +318,10 @@ TextureImporter:
       name: Arrows_pack_10
       rect:
         serializedVersion: 2
-        x: 1213
-        y: 477
-        width: 550
-        height: 166
+        x: 2429
+        y: 189
+        width: 166
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -339,10 +339,10 @@ TextureImporter:
       name: Arrows_pack_11
       rect:
         serializedVersion: 2
-        x: 2237
-        y: 381
-        width: 550
-        height: 166
+        x: 3517
+        y: 189
+        width: 166
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

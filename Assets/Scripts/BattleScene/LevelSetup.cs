@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.AI;
+using System.Drawing;
 
 public enum Areas
 {
@@ -18,6 +19,7 @@ public class LevelSetup : MonoBehaviour
 {
     public Tilemap WalkableTilemap;
     public Tilemap BlockingTilemap;
+    public Tilemap NotTransparentWalkableTilemap;
     public GameObject DungeonPrefab;
     public NavMeshSurface Navigation;
     public EnemyFactory Spawner;
@@ -27,7 +29,7 @@ public class LevelSetup : MonoBehaviour
 
     public void SetupLevel()
     {
-        CreateTerrain(Areas.Dungeon, new Vector2(50, 50));
+            CreateTerrain(Areas.Dungeon, new Vector2(50, 50));
     }
 
     public void CreateTerrain(Areas areaType, Vector2 size)
@@ -55,4 +57,12 @@ public class LevelSetup : MonoBehaviour
         Progression.SetTimerSetting(1, 60);
         Progression.StartTimer();
     }
+
+    public void GetMap()
+    {
+        //GlobalData.instance.LevelData.Map = currentLevel.Setup((int)size.x, (int)size.y, 10);
+
+    }
+
+
 }
