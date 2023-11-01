@@ -20,15 +20,15 @@ public class Fireball : Skill
     private Queue<projectile> fireballsPool = new Queue<projectile>();
     private IEnumerator cooldownCoroutine;
     //Skill Params
-    private CombinedStat damageModifier = new CombinedStat(0, 0, new List<float>());
+    //private CombinedStat damageModifier = new CombinedStat(0, 0, new List<float>());
     private CombinedStat projectileDamageModifier = new CombinedStat(0, 0, new List<float> { 0.6f });
     private CombinedStat explosionDamageModifier = new CombinedStat(0, 0, new List<float> { 0.3f });
-    private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
+    //private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
     private CombinedStat projectileCountModifier = new CombinedStat(1, 0, new List<float>());
     private CombinedStat projectileSpeedModifier = new CombinedStat(1, 0, new List<float>());
     private CombinedStat areaOfEffectModifier = new CombinedStat(1, 0, new List<float>());
     private float baseSkillCooldown = 1;
-    private float baseCriticalStrikeChance = 5;
+    //private float baseCriticalStrikeChance = 5;
     //Utility Params
     private float projectileLifeTime => 1 / projectileSpeedModifier.ModValue;
     private int pierceCount = 1;
@@ -77,48 +77,49 @@ public class Fireball : Skill
             return false;
     }
 
-    private List<HitData> getHitData()
-    {
-        Debug.LogError("Not refactored code");
-        List<HitData> hits = new List<HitData>();
-        HitData projectileHit = owner.Stats.GetHitData();
-        HitData explosionHit = owner.Stats.GetHitData();
-        //Projectile
-        projectileHit.PhysicalDamage *= damageModifier.ModValue * projectileDamageModifier.ModValue; //Переписать бы
-        //projectileHit.FireDamage *= damageModifier.ModValue * projectileDamageModifier.ModValue; //Переписать бы
-        //projectileHit.ColdDamage *= damageModifier.ModValue * projectileDamageModifier.ModValue; //Переписать бы
-        //projectileHit.LightningDamage *= damageModifier.ModValue * projectileDamageModifier.ModValue; //Переписать бы
-        hits.Add(projectileHit);
-        //Explosion
-        explosionHit.PhysicalDamage *= damageModifier.ModValue * explosionDamageModifier.ModValue; //Переписать бы
-        //explosionHit.FireDamage *= damageModifier.ModValue * explosionDamageModifier.ModValue; //Переписать бы
-        //explosionHit.ColdDamage *= damageModifier.ModValue * explosionDamageModifier.ModValue; //Переписать бы
-        //explosionHit.LightningDamage *= damageModifier.ModValue * explosionDamageModifier.ModValue; //Переписать бы
-        hits.Add(explosionHit);
-        return hits;
-    }
+    //private List<HitData> getHitData()
+    //{
+    //    Debug.LogError("Not refactored code");
+    //    List<HitData> hits = new List<HitData>();
+    //    HitData projectileHit = owner.Stats.GetHitData();
+    //    HitData explosionHit = owner.Stats.GetHitData();
+    //    //Projectile
+    //    //projectileHit.PhysicalDamage *= damageModifier.ModValue * projectileDamageModifier.ModValue; //Переписать бы
+    //    ////projectileHit.FireDamage *= damageModifier.ModValue * projectileDamageModifier.ModValue; //Переписать бы
+    //    ////projectileHit.ColdDamage *= damageModifier.ModValue * projectileDamageModifier.ModValue; //Переписать бы
+    //    ////projectileHit.LightningDamage *= damageModifier.ModValue * projectileDamageModifier.ModValue; //Переписать бы
+    //    //hits.Add(projectileHit);
+    //    ////Explosion
+    //    //explosionHit.PhysicalDamage *= damageModifier.ModValue * explosionDamageModifier.ModValue; //Переписать бы
+    //    ////explosionHit.FireDamage *= damageModifier.ModValue * explosionDamageModifier.ModValue; //Переписать бы
+    //    ////explosionHit.ColdDamage *= damageModifier.ModValue * explosionDamageModifier.ModValue; //Переписать бы
+    //    ////explosionHit.LightningDamage *= damageModifier.ModValue * explosionDamageModifier.ModValue; //Переписать бы
+    //    hits.Add(explosionHit);
+    //    return hits;
+    //}
 
     private List<projectile> setupProjectiles(Vector3 castPoint, List<projectile> projectiles)
     {
-        float currentDegree = 0;
-        List<HitData> hits = getHitData();
-        for (int i = 0; i < projectiles.Count; i++)
-        {
-            //Setup transform data
-            projectiles[i].hit.SelfTransform.position = selfTransform.position;
-            projectiles[i].hit.SelfTransform.rotation = Quaternion.Euler(selfTransform.rotation.eulerAngles.x, selfTransform.rotation.eulerAngles.y, (Mathf.Atan2(castPoint.y - selfTransform.position.y, castPoint.x - selfTransform.position.x) * Mathf.Rad2Deg - 90) + currentDegree); //Переписать
-            //Set Hits
-            //Set Porjectiles
-            projectiles[i].hit.SetHit(hits[0]);
-            projectiles[i].pierce.SetPierce(resultPierceCount);
-            projectiles[i].hit.SetActiveHit(true);
-            //Set Explosion
-            projectiles[i].explosopnHit.SetHit(hits[1]);
-            if (i % 2 == 0)
-                currentDegree = (currentDegree + projectilesDegree) * -1;
-            else
-                currentDegree = currentDegree * -1;
-        }
+        //Not refactored code
+        //float currentDegree = 0;
+        //List<HitData> hits = getHitData();
+        //for (int i = 0; i < projectiles.Count; i++)
+        //{
+        //    //Setup transform data
+        //    projectiles[i].hit.SelfTransform.position = selfTransform.position;
+        //    projectiles[i].hit.SelfTransform.rotation = Quaternion.Euler(selfTransform.rotation.eulerAngles.x, selfTransform.rotation.eulerAngles.y, (Mathf.Atan2(castPoint.y - selfTransform.position.y, castPoint.x - selfTransform.position.x) * Mathf.Rad2Deg - 90) + currentDegree); //Переписать
+        //    //Set Hits
+        //    //Set Porjectiles
+        //    projectiles[i].hit.SetHit(hits[0]);
+        //    projectiles[i].pierce.SetPierce(resultPierceCount);
+        //    projectiles[i].hit.SetActiveHit(true);
+        //    //Set Explosion
+        //    projectiles[i].explosopnHit.SetHit(hits[1]);
+        //    if (i % 2 == 0)
+        //        currentDegree = (currentDegree + projectilesDegree) * -1;
+        //    else
+        //        currentDegree = currentDegree * -1;
+        //}
         return projectiles;
     }
 

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using System;
 using Statuses;
 using Random = UnityEngine.Random;
-using System.Linq;
+using Unity.VisualScripting;
 
 [System.Serializable]
 public enum StatTag 
@@ -49,6 +49,15 @@ public enum StatModType
     Base,
     Increase,
     More
+}
+
+[System.Serializable]
+public enum DamageType
+{
+    Physical,
+    Fire,
+    Cold,
+    Lightning
 }
 
 [System.Serializable]
@@ -129,7 +138,6 @@ public class UnitStats : MonoBehaviour
         }
         //Init Stat Section
         stats[StatTag.CooldownRecovery].AddBaseValue(1);
-        stats[StatTag.CriticalStrikeChance].AddBaseValue(5);
         stats[StatTag.CriticalStrikeMultiplier].AddBaseValue(150);
         stats[StatTag.PoisonDamage].AddBaseValue(4);
         stats[StatTag.BleedingDamage].AddBaseValue(2);
@@ -139,26 +147,46 @@ public class UnitStats : MonoBehaviour
         stats[StatTag.AreaOfEffect].AddBaseValue(1);
         //Statuses
         StatusesByDamageType.Add(StatTag.PhysicalDamage, new List<StatusType> { StatusType.Bleeding });
+
         //Debug
 
         foreach (SetterStatData stat in StartingStats)
-        {
             stats[stat.Tag] = new CombinedStat(stat.Base, stat.Increase, stat.More);
-        }
     }
 
     public HitData GetHitData() //Возможно перенос
     {
         HitData hit = new HitData(owner);
         hit.Ally = ally;
-        hit.PhysicalDamage = stats[StatTag.PhysicalDamage].ValueWithAddedParams(stats[StatTag.damage]);
-        hit.FireDamage = stats[StatTag.PhysicalDamage].ValueWithAddedParams(stats[StatTag.FireDamage]);
-        hit.ColdDamage = stats[StatTag.PhysicalDamage].ValueWithAddedParams(stats[StatTag.ColdDamage]);
-        hit.LightningDamage = stats[StatTag.PhysicalDamage].ValueWithAddedParams(stats[StatTag.LightningDamage]);
+        //hit.PhysicalDamage = stats[StatTag.PhysicalDamage].ValueWithAddedParams(stats[StatTag.damage]);
+        //hit.FireDamage = stats[StatTag.PhysicalDamage].ValueWithAddedParams(stats[StatTag.FireDamage]);
+        //hit.ColdDamage = stats[StatTag.PhysicalDamage].ValueWithAddedParams(stats[StatTag.ColdDamage]);
+        //hit.LightningDamage = stats[StatTag.PhysicalDamage].ValueWithAddedParams(stats[StatTag.LightningDamage]);
+        hit.Damage = GetDamageData();
         hit.CriticalStrikeChance = stats[StatTag.CriticalStrikeChance].Value; //Переписать
         hit.CriticalStrikeMultiplier = stats[StatTag.CriticalStrikeMultiplier].Value;
         //OnPreparingHit.Invoke(hit, new List<StatTag>());
         return hit;
+    }
+
+    public Dictionary<DamageType, CombinedStat> GetDamageData()
+    {
+        Dictionary<DamageType, CombinedStat> damages = new Dictionary<DamageType, CombinedStat>();
+
+        for(int i=0; i < 4; i++)
+        {
+            CombinedStat damage = new CombinedStat();
+            DamageType type = (DamageType)i;
+            StatTag statTag= DamageTypeToStatTag.GetDamageTypeToStatTag(type);
+            damage.AddStat(GetAdvancedStat(statTag));
+            damage.AddModValues(GetAdvancedStat(StatTag.damage));
+            if (damage.Value > 0)
+            {
+                damages.Add(type, damage);
+            }
+        }
+
+        return damages;
     }
 
     public Status GetStatus(StatusType type)
@@ -183,27 +211,27 @@ public class UnitStats : MonoBehaviour
         return null; //Переписать
     }
 
-    public Status GetStatus(StatusType type, float magnitude, float duration)
-    {
-        switch (type)
-        {
-            case (StatusType.Poison):
-                {
-                    Status status = new Status(StatusType.Poison, duration * stats[StatTag.PoisonDuration].ModValue, (int)(magnitude * stats[StatTag.PoisonDamage].ModValue)); //sender исправить, int преобразование
-                    status.damage = stats[StatTag.PoisonDamage].Value;
-                    return status;
-                }
-            case (StatusType.Bleeding):
-                {
-                    Status status = new Status(StatusType.Bleeding, duration * stats[StatTag.BleedingDuration].ModValue, (int)(magnitude * stats[StatTag.BleedingDamage].Value)); //sender исправить, int преобразование
-                    status.damage = stats[StatTag.BleedingDamage].Value;
-                    return status;
-                }
-        }
-        //Status status = new Status(); // Debug
-        Debug.LogError("Null status created");
-        return null; //Переписать
-    }
+    //public Status GetStatus(StatusType type, float magnitude, float duration)
+    //{
+    //    switch (type)
+    //    {
+    //        case (StatusType.Poison):
+    //            {
+    //                Status status = new Status(StatusType.Poison, duration * stats[StatTag.PoisonDuration].ModValue, (int)(magnitude * stats[StatTag.PoisonDamage].ModValue)); //sender исправить, int преобразование
+    //                status.damage = stats[StatTag.PoisonDamage].Value;
+    //                return status;
+    //            }
+    //        case (StatusType.Bleeding):
+    //            {
+    //                Status status = new Status(StatusType.Bleeding, duration * stats[StatTag.BleedingDuration].ModValue, (int)(magnitude * stats[StatTag.BleedingDamage].Value)); //sender исправить, int преобразование
+    //                status.damage = stats[StatTag.BleedingDamage].Value;
+    //                return status;
+    //            }
+    //    }
+    //    //Status status = new Status(); // Debug
+    //    Debug.LogError("Null status created");
+    //    return null; //Переписать
+    //}
 
     public HitData GetHitData(List<StatTag> tags) //Возможно перенос
     {
@@ -215,10 +243,11 @@ public class UnitStats : MonoBehaviour
             modStat.AddIncreaseValue(stats[tag].IncreaseValue);
             modStat.AddMoreValue(stats[tag].MoreValues);
         }
-        hit.PhysicalDamage = stats[StatTag.PhysicalDamage].ValueWithAddedParams(stats[StatTag.damage]) * modStat.Value;//Переписать
-        hit.FireDamage = stats[StatTag.FireDamage].Value * modStat.Value;//Переписать
-        hit.ColdDamage = stats[StatTag.ColdDamage].Value * modStat.Value;//Переписать
-        hit.LightningDamage = stats[StatTag.LightningDamage].Value * modStat.Value;//Переписать
+        //hit.PhysicalDamage = stats[StatTag.PhysicalDamage].ValueWithAddedParams(stats[StatTag.damage]) * modStat.Value;//Переписать
+        //hit.FireDamage = stats[StatTag.FireDamage].Value * modStat.Value;//Переписать
+        //hit.ColdDamage = stats[StatTag.ColdDamage].Value * modStat.Value;//Переписать
+        //hit.LightningDamage = stats[StatTag.LightningDamage].Value * modStat.Value;//Переписать
+        hit.Damage = GetDamageData();
         hit.CriticalStrikeChance = stats[StatTag.CriticalStrikeChance].Value; //Переписать
         hit.CriticalStrikeMultiplier = stats[StatTag.CriticalStrikeMultiplier].Value;
         if(tags.Contains(StatTag.PhysicalDamage) && stats[StatTag.BleedingChance].Value > 0) //Переписать
@@ -315,6 +344,12 @@ public class UnitStats : MonoBehaviour
                 break;
         }
         OnStatChanged[tag].Invoke(stat.Value);
+    }
+
+    public void ModifyDamageStat(CombinedStat stat, List<StatTag> tags)
+    {
+        foreach (StatTag tag in tags)
+            stat.AddModValues(GetAdvancedStat(tag));
     }
 
     public void RemoveStat(StatTag tag, StatModType type, float value)

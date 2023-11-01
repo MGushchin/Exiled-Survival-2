@@ -19,7 +19,6 @@ public class AttackDashing : Skill
     private float baseSkillCooldown = 2;
     private CombinedStat cooldownModifier = new CombinedStat(1, 0, new List<float>());
     private float channelingTime = 1;
-    private bool channeling = false;
 
     //Utility Params
     private float dashTime = 0.25f;
@@ -53,7 +52,7 @@ public class AttackDashing : Skill
     {
         if (cooldown <= 0)
         {
-            channeling = true;
+            //channeling = true;
             trail.enabled = true;
             HitData hit = getHitData();
             dashingHit.SetHit(hit);

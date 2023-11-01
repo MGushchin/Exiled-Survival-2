@@ -93,7 +93,8 @@ public class UnitActions : MonoBehaviour
         {
             if (moveOffset == Vector3.zero)
             {
-                Stop();
+                if(Movement.IsMoving)
+                    Stop();
             }
             else
             {
@@ -117,7 +118,7 @@ public class UnitActions : MonoBehaviour
         if (alive && !stunned)
         {
             if(!Movement.IsMoving)
-                Animations.SetState(UnitState.Attack);
+                Animations.SetState(UnitState.Attack, 1 * Stats.GetAdvancedStat(StatTag.CooldownRecovery).Value); // Переписать доступ
             Movement.LookAt(direction);
             SkillsActivation.UseSkill(direction, skillIndex);
         }
@@ -131,10 +132,19 @@ public class UnitActions : MonoBehaviour
 
     public HitFeedback TakeDamage(HitData hit)
     {
+        Debug.Log("Take Damage");
         HitFeedback feedback = new HitFeedback();
         feedback.hitTaker = this;
         feedback.hitPosition = selfTransform.position;
-        float damage = hit.PhysicalDamage + hit.FireDamage + hit.ColdDamage + hit.LightningDamage;
+        //float damage = hit.PhysicalDamage + hit.FireDamage + hit.ColdDamage + hit.LightningDamage;
+
+        float damage = 0;
+
+        foreach (CombinedStat damageType in hit.Damage.Values)
+        {
+            damage += damageType.Value;
+        }
+
         if (Random.Range(0, 100) <= hit.CriticalStrikeChance)
         {
             damage *= (hit.CriticalStrikeMultiplier / 100);
@@ -158,16 +168,26 @@ public class UnitActions : MonoBehaviour
         }
 
         OnTakingDamage.Invoke(damage, selfTransform.position);
-
+        //Debug.Log(gameObject.name + " Damage taken " + damage);
         return feedback;
     }
 
     public HitFeedback TakeDamage(HitData hit, Vector3 hitPosition)
     {
+        Debug.Log("Take Damage " + hit.Damage);
         HitFeedback feedback = new HitFeedback();
         feedback.hitTaker = this;
         feedback.hitPosition = hitPosition;
-        float damage = hit.PhysicalDamage + hit.FireDamage + hit.ColdDamage + hit.LightningDamage;
+
+        float damage = 0;
+
+        foreach (CombinedStat damageType in hit.Damage.Values)
+        {
+            damage += damageType.Value;
+        }
+
+        Debug.Log("Damage = " + damage);
+
         if (Random.Range(0, 100) <= hit.CriticalStrikeChance)
         {
             damage *= (hit.CriticalStrikeMultiplier / 100);
@@ -191,6 +211,7 @@ public class UnitActions : MonoBehaviour
         }
 
         OnTakingDamage.Invoke(damage, selfTransform.position);
+        //Debug.Log(gameObject.name + " Damage taken " + damage);
 
         return feedback;
     }
@@ -208,6 +229,7 @@ public class UnitActions : MonoBehaviour
         }
 
         OnTakingDamage.Invoke(damage, selfTransform.position);
+        //Debug.Log(gameObject.name + " DOT Damage taken " + damage);
 
         return feedback;
     }

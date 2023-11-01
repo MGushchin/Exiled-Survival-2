@@ -8,10 +8,7 @@ public class PhysicalDamageMastery : Skill
     //Utility
 
     //Skill params
-    private CombinedStat physicalDamage = new CombinedStat(0, 0, new List<float>());
-    private CombinedStat elementalDamage = new CombinedStat(0, 0, new List<float>());
-    private CombinedStat bleedingChance = new CombinedStat(0, 0, new List<float>());
-    private CombinedStat bleedingDamage = new CombinedStat(0, 0, new List<float>());
+    private List<Affix> affixes = new List<Affix>();
 
     public override void InitSKill(UnitActions skillOwner)
     {
@@ -41,45 +38,18 @@ public class PhysicalDamageMastery : Skill
 
     public override void ApplyUpgrade(SkillMod mod)
     {
+        Debug.Log("ApplyUpgrade " + mod.name);
+        foreach (Affix affix in mod.Affixes)
+        {
+            Debug.Log("Affix " + affix.Tag + " " + affix.ModType + " " + affix.Value);
+            affixes.Add(affix);
+            owner.Stats.AddStat(affix.Tag, affix.ModType, affix.Value);
+        }
         switch (mod.name)
         {
-            case ("Physical Damage Mastery"):
-                {
-                    physicalDamage.AddIncreaseValue(20);
-                    owner.Stats.AddStat(StatTag.PhysicalDamage, StatModType.Increase, 20);
-                }
-                break;
-            case ("Increased Physical Damage"):
-                {
-                    physicalDamage.AddIncreaseValue(10);
-                    owner.Stats.AddStat(StatTag.PhysicalDamage, StatModType.Increase, 10);
-                }
-                break;
-            case ("Pure Power"):
-                {
-                    physicalDamage.AddIncreaseValue(20);
-                    owner.Stats.AddStat(StatTag.PhysicalDamage, StatModType.Increase, 20);
-                    elementalDamage.RemoveIncreaseValue(20);
-                    owner.Stats.RemoveStat(StatTag.FireDamage, StatModType.Increase, 20);
-                    owner.Stats.RemoveStat(StatTag.ColdDamage, StatModType.Increase, 20);
-                    owner.Stats.RemoveStat(StatTag.LightningDamage, StatModType.Increase, 20);
-                }
-                break;
-            case ("Chance to bleed"):
-                {
-                    bleedingChance.AddBaseValue(40);
-                    owner.Stats.AddStat(StatTag.BleedingChance, StatModType.Base, 40);
-                }
-                break;
-            case ("Bleeding damage"):
-                {
-                    bleedingDamage.AddBaseValue(20);
-                    owner.Stats.AddStat(StatTag.BleedingDamage, StatModType.Increase, 20);
-                }
-                break;
             default:
                 {
-                    Debug.LogWarning("Default exception");
+                    
                 }break;
         }
     }

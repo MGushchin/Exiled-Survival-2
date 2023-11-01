@@ -170,6 +170,11 @@ public class PlayerSkillsGiver : MonoBehaviour
             }
             if (choicenMod == null)
                 Debug.LogError("Null mod detected");
+            if (choicenMod.MultiRarity)
+            {
+                getMultiRarityMod(choicenMod);
+                choicenMod.UpdateDescription();
+            }
             avaibleMods.Remove(choicenMod);
             preparedMods.Add(choicenMod);
         }
@@ -207,7 +212,7 @@ public class PlayerSkillsGiver : MonoBehaviour
     //        avaibleMods.Add(mod);
     //    return preparedMods;
     //}
-
+    
     public void LearnSkillMod(string skillModName)
     {
         if (allModsByName.ContainsKey(skillModName))
@@ -403,5 +408,23 @@ public class PlayerSkillsGiver : MonoBehaviour
         {
             WeightStorage.AddTag(tag);
         }
+    }
+
+    private SkillMod getMultiRarityMod(SkillMod mod)
+    {
+        float weight = 0;
+        float randomWeight = Random.Range(0, mod.Weight);
+        foreach(RarityAffixes rarityAffix in mod.MultiRarityAffixes)
+        {
+            weight += rarityAffix.Weight;
+            if(randomWeight <= weight)
+            {
+                mod.UpdateMultiRarity(rarityAffix.Rarity);
+                return mod;
+            }
+        }
+        Debug.LogWarning("Rarity not found");
+        return mod;
+
     }
 }

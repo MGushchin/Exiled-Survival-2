@@ -15,8 +15,15 @@ public class StatusDisplay : MonoBehaviour
     public void UpdateIcons(List<StatusType> statusType, List<string> statusValues)// ¬озможно избежать строк
     {
         compareIconsCount(statusType.Count);
+        //if (statusType.Count == 0)
+        //    Debug.Log("Status type = 0");
+
         int counter = 0;
-        for(int i=0; i < statusType.Count && i < statusValues.Count && i < Icons.Count; i++, counter++)
+
+        //foreach (StatusIcon icon in Icons) // переписать
+        //    icon.gameObject.SetActive(false);
+
+        for (int i=0; i < statusType.Count && i < statusValues.Count && i < Icons.Count; i++, counter++)
         {
             Sprite displayedImage = DefaultImage;
             switch(statusType[0])
@@ -58,6 +65,10 @@ public class StatusDisplay : MonoBehaviour
         {
             StatusIcon statusIcon = Instantiate(IconPrefab, transform).GetComponent<StatusIcon>();
             Icons.Add(statusIcon);
+        }
+        for(int i = requirementIcons; i < Icons.Count; i++)
+        {
+            Icons[i].gameObject.SetActive(false);
         }
     }
 }

@@ -10,8 +10,7 @@ namespace Skills
         //Utility
 
         //Skill params
-        private CombinedStat maximumLifeMod = new CombinedStat(0, 0, new List<float>());
-        private CombinedStat lifeRegenerationMod = new CombinedStat(0, 0, new List<float>());
+        private List<Affix> affixes = new List<Affix>();
 
         public override void InitSKill(UnitActions skillOwner)
         {
@@ -41,25 +40,18 @@ namespace Skills
 
         public override void ApplyUpgrade(SkillMod mod)
         {
+            Debug.Log("ApplyUpgrade " + mod.name);
+            foreach (Affix affix in mod.Affixes)
+            {
+                Debug.Log("Affix " + affix.Tag + " " + affix.ModType + " " + affix.Value);
+                affixes.Add(affix);
+                owner.Stats.AddStat(affix.Tag, affix.ModType, affix.Value);
+            }
             switch (mod.name)
             {
-                case ("Life Mastery"):
+                default:
                     {
-                        maximumLifeMod.AddIncreaseValue(10);
-                        owner.Stats.AddStat(StatTag.life, StatModType.Increase, 10);
-                    }
-                    break;
-                case ("Increased Maximum Life"):
-                    {
-                        maximumLifeMod.AddIncreaseValue(10);
-                        owner.Stats.AddStat(StatTag.life, StatModType.Increase, 10);
-                    }
-                    break;
-                case ("Life Regeneration"):
-                    {
-                        lifeRegenerationMod.AddBaseValue(1);
-                        owner.Stats.AddStat(StatTag.lifeRegeneration, StatModType.Base, 1);
-
+                        
                     }
                     break;
             }

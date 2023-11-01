@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -16,6 +17,14 @@ public struct SkillModRequirements
 //    public Skill skill;
 //    public int level;
 //}
+
+[System.Serializable]
+public class RarityAffixes
+{
+    public Rarities Rarity;
+    public float Weight;
+    public List<Affix> Affixes;
+}
 
 [System.Serializable]
 public struct Affix
@@ -44,7 +53,8 @@ public class SkillMod : ScriptableObject
     [SerializeField]
     [TextArea(4, 8)]
     private string description;
-    public string Description => description;
+    [HideInInspector]
+    public string Description;
     [SerializeField]
     private int maximumLevel = 0;
     public int MaximumLevel => maximumLevel;
@@ -58,15 +68,19 @@ public class SkillMod : ScriptableObject
     private List<SkillTag> tags = new List<SkillTag>();
     public List<SkillTag> Tags => tags;
     [SerializeField]
-    private float weight;
+    private float weight; //Must be equal to sum of MultiRarityAffixes
     public float Weight => weight;
     [SerializeField]
     private bool baseMod;
     public bool BaseMod => baseMod;
-    [Space]
-    //Legacy
-    public List<float> Values = new List<float>(); // Ограничить доступ
+
     public List<Affix> Affixes = new List<Affix>();
+    [Space]
+    [SerializeField]
+    private bool multiRarity = false;
+    public bool MultiRarity => multiRarity;
+
+    public List<RarityAffixes> MultiRarityAffixes = new List<RarityAffixes>();
     [Space]
     public List<SkillModRequirements> SkillsModsRequirements = new List<SkillModRequirements>();
     [Space]
@@ -87,40 +101,69 @@ public class SkillMod : ScriptableObject
         parentSkill = parent;
     }
 
+    public void UpdateMultiRarity(Rarities _rarity)
+    {
+        if(multiRarity)
+        {
+            rarity = _rarity;
+            Affixes.Clear();
+            foreach(RarityAffixes rarityAffix in MultiRarityAffixes)
+            {
+                if(rarityAffix.Rarity == rarity)
+                    foreach(Affix affix in rarityAffix.Affixes)
+                    {
+                        Affixes.Add(affix);
+                    }
+            }
+        }
+    }
+
     public void UpdateDescription()
     {
-        //Legacy
-        for (int i = 0; i < Values.Count; i++)
+        Description = description;
+        if (multiRarity)
         {
-            string oldValue = "(" + (i + 1) + ")";
-            description = description.Replace(oldValue, Values[i].ToString());
+            for (int i = 0; i < MultiRarityAffixes.Count; i++)
+            {
+                if (MultiRarityAffixes[i].Rarity == rarity)
+                {
+                    string oldValue = "(" + "Affix" + (i + 1) + ")";
+                    for(int j=0; j <  MultiRarityAffixes[i].Affixes.Count; j++)
+                    {
+                        oldValue = "(" + "Affix" + (j + 1) + ")";
+                        Description = description.Replace(oldValue, MultiRarityAffixes[i].Affixes[j].Value.ToString());
+                    }
+                    //Description = description.Replace(oldValue, MultiRarityAffixes[i].Affixes[i].Value.ToString());
+                }
+            }
         }
-        for (int i = 0; i < Affixes.Count; i++)
-        {
-            string oldValue = "(" + "Affix" +(i + 1) + ")";
-            description = description.Replace(oldValue, Affixes[i].Value.ToString());
-        }
+        else
+            for (int i = 0; i < Affixes.Count; i++)
+            {
+                string oldValue = "(" + "Affix" + (i + 1) + ")";
+                Description = description.Replace(oldValue, Affixes[i].Value.ToString());
+            }
         //Debug
         if (description == "" || description == null)
         {
             Debug.LogWarning("Automatically generated description");
-            description = "";
+            Description = "";
             foreach (Affix affix in Affixes)
                 switch (affix.ModType)
                 {
                     case (StatModType.Base):
                         {
-                            description = "+" + affix.Value.ToString() + " to " + affix.Tag;
+                            Description = "+" + affix.Value.ToString() + " to " + affix.Tag;
                         }
                         break;
                     case (StatModType.Increase):
                         {
-                            description = affix.Value.ToString() + "% increased " + affix.Tag;
+                            Description = affix.Value.ToString() + "% increased " + affix.Tag;
                         }
                         break;
                     case (StatModType.More):
                         {
-                            description = affix.Value.ToString() + "% more " + affix.Tag;
+                            Description = affix.Value.ToString() + "% more " + affix.Tag;
                         }
                         break;
                 }

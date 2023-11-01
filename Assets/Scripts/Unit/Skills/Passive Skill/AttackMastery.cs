@@ -8,12 +8,10 @@ public class AttackMastery : Skill
     //Utility
 
     //Skill params
-    private CombinedStat attackDamage = new CombinedStat(0, 0, new List<float>());
-    private CombinedStat multistrikeChance = new CombinedStat(0, 0, new List<float>());
-    private CombinedStat vampirism = new CombinedStat(0, 0, new List<float>());
+    private List<Affix> affixes = new List<Affix>();
 
     //Ruthless hits
-    private bool canDealRuthless = false;
+    //private bool canDealRuthless = false;
     private float ruthlessHitDamageMultiplier = 1.8f;
     private int ruthlessCounter = 0;
     private int hitsToRuthless = 3;
@@ -45,58 +43,39 @@ public class AttackMastery : Skill
 
     public override void ApplyUpgrade(SkillMod mod)
     {
+        Debug.Log("ApplyUpgrade " + mod.name);
+        foreach (Affix affix in mod.Affixes)
+        {
+            Debug.Log("Affix " + affix.Tag + " " + affix.ModType + " " + affix.Value);
+            affixes.Add(affix);
+            owner.Stats.AddStat(affix.Tag, affix.ModType, affix.Value);
+        }
         switch (mod.name)
         {
-            case ("Attack Mastery"):
-                {
-                    attackDamage.AddIncreaseValue(20);
-                    owner.Stats.AddStat(StatTag.AttackDamage, StatModType.Increase, 20);
-                }
-                break;
-            case ("Attack Damage"):
-                {
-                    attackDamage.AddIncreaseValue(10);
-                    owner.Stats.AddStat(StatTag.AttackDamage, StatModType.Increase, 10);
-                }
-                break;
-            case ("Attack Multistrike"):
-                {
-                    multistrikeChance.AddBaseValue(10);
-                    owner.Stats.AddStat(StatTag.MultistrikeChance, StatModType.Base, 10);
-                }
-                break;
-            case ("Ruthless hits"):
-                {
-                    canDealRuthless = true;
-                    //owner.Stats.OnPreparingHit.AddListener(RuthlessHitsCount);
-                }
-                break;
-            case ("Attack Vampirism"):
-                {
-                    vampirism.AddBaseValue(1);
-                    owner.Stats.AddStat(StatTag.LifeLeech, StatModType.Base, 1);
-                }
-                break;
             default:
                 {
-                    Debug.LogError("Default exception");
+                    
                 }
                 break;
         }
     }
 
-    public void RuthlessHitsCount(HitData data, List<StatTag> tags)
-    {
-        if (tags.Contains(StatTag.AttackDamage))
-        {
-            ruthlessCounter++;
-            if (ruthlessCounter >= hitsToRuthless)
-            {
-                data.PhysicalDamage *= ruthlessHitDamageMultiplier;
-                data.FireDamage *= ruthlessHitDamageMultiplier;
-                data.ColdDamage *= ruthlessHitDamageMultiplier;
-                data.LightningDamage *= ruthlessHitDamageMultiplier;
-            }
-        }
-    }
+    //public void RuthlessHitsCount(HitData data, List<StatTag> tags)
+    //{
+    //    if (tags.Contains(StatTag.AttackDamage))
+    //    {
+    //        ruthlessCounter++;
+    //        if (ruthlessCounter >= hitsToRuthless)
+    //        {
+    //            //data.PhysicalDamage *= ruthlessHitDamageMultiplier;
+    //            //data.FireDamage *= ruthlessHitDamageMultiplier;
+    //            //data.ColdDamage *= ruthlessHitDamageMultiplier;
+    //            //data.LightningDamage *= ruthlessHitDamageMultiplier;
+    //            foreach (CombinedStat damageType in data.Damage.Values)
+    //            {
+    //                damageType.AddMoreValue(ruthlessHitDamageMultiplier);
+    //            }
+    //        }
+    //    }
+    //}
 }

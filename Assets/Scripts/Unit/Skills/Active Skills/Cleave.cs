@@ -22,8 +22,6 @@ public class Cleave : Skill
     private IEnumerator cooldownCoroutine;
 
     #region SkillParams
-    //private CombinedStat damageModifier = new CombinedStat(5, 0, new List<float>());
-    //private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
     private CombinedStat areaOfEffectModifier = new CombinedStat(3, 0, new List<float>());
     private float baseSkillCooldown = 1;
     private float multistrikeChance = 0;
@@ -46,8 +44,8 @@ public class Cleave : Skill
         selfTransform = gameObject.transform;
         skillCooldown = resultSkillCooldown;
         cooldown = 0;
-        damageModifier = new CombinedStat(100, 0, new List<float>());
-        attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
+        damageModifier = new CombinedStat(120, 0, new List<float>());
+        criticalStrikeChanceModifier.AddBaseValue(5);
         //Init methods
         hitTags = new List<StatTag>() { StatTag.AttackDamage, StatTag.PhysicalDamage, StatTag.AreaDamage };
         updateHitPool();
@@ -65,14 +63,16 @@ public class Cleave : Skill
             //Setup Hits
             int garantedMultistrikes = (int)(resultMultistrikeChance / 100);
             int hitsCount = 1 + garantedMultistrikes;
+
             if (Random.Range(1, 100) <= (resultMultistrikeChance - garantedMultistrikes * 100))
-            {
                 hitsCount++;
-            }
+
             List<skillHit> hitsToSetup = new List<skillHit>();
             for (int i = 0; i < hitsCount; i++)
                 hitsToSetup.Add(hitsPool.Dequeue());
+
             setupHit(castPoint, hitsToSetup);
+
             //Self skill setup
             skillCooldown = resultSkillCooldown;
             cooldown = skillCooldown;
@@ -91,45 +91,7 @@ public class Cleave : Skill
 
     protected override HitData getHitData()
     {
-        #region StatsMethod
-        HitData hit = new HitData(owner);
-        hit.Ally = owner.Ally;
-        CombinedModStat modStat = new CombinedModStat();
-        modStat.AddIncreaseValue(owner.Stats.GetAdvancedStat(StatTag.damage).IncreaseValue);
-        modStat.AddMoreValue(owner.Stats.GetAdvancedStat(StatTag.damage).MoreValue);
-
-        foreach (StatTag tag in hitTags)
-        {
-            modStat.AddIncreaseValue(owner.Stats.GetAdvancedStat(tag).IncreaseValue);
-            modStat.AddMoreValue(owner.Stats.GetAdvancedStat(tag).MoreValues);
-        }
-
-        hit.PhysicalDamage = owner.Stats.GetAdvancedStat(StatTag.PhysicalDamage).ValueWithAddedParams(modStat.Value) * damageMultiplier;//Переписать
-        hit.FireDamage = owner.Stats.GetAdvancedStat(StatTag.FireDamage).ValueWithAddedParams(modStat.Value) * damageMultiplier;//Переписать
-        hit.ColdDamage = owner.Stats.GetAdvancedStat(StatTag.ColdDamage).ValueWithAddedParams(modStat.Value) * damageMultiplier;//Переписать
-        hit.LightningDamage = owner.Stats.GetAdvancedStat(StatTag.LightningDamage).ValueWithAddedParams(modStat.Value) * damageMultiplier;//Переписать
-        hit.CriticalStrikeChance = owner.Stats.GetAdvancedStat(StatTag.CriticalStrikeChance).ValueWithAddedParams(criticalStrikeChanceModifier); //Переписать
-        hit.CriticalStrikeMultiplier = owner.Stats.GetAdvancedStat(StatTag.CriticalStrikeMultiplier).Value;
-
-        if (owner.Stats.GetAdvancedStat(StatTag.BleedingChance).Value > 0) //Bleeding
-        {
-            int garantedStacks = (int)(owner.Stats.GetAdvancedStat(StatTag.BleedingChance).Value / 100);
-            int stacksCount = garantedStacks;
-            if (Random.Range(1, 100f) <= (owner.Stats.GetAdvancedStat(StatTag.BleedingChance).Value - garantedStacks * 100))
-            {
-                stacksCount++;
-            }
-            for (int i = 0; i < stacksCount; i++)
-            {
-                //Bleeding
-                Status status = new Status(StatusType.Bleeding, owner.Stats.GetAdvancedStat(StatTag.BleedingDuration).Value, (int)owner.Stats.GetAdvancedStat(StatTag.BleedingDamage).Value); //sender исправить, int преобразование
-                status.damage = owner.Stats.GetAdvancedStat(StatTag.BleedingDamage).Value;
-                hit.InflicktedStatuses.Add(owner.Stats.GetStatus(StatusType.Bleeding)); //Ограничить по шансу и статусу
-            }
-        }
-        #endregion
-
-        hit.Tags = skillTags;
+        HitData hit = base.getHitData();
         return hit;
     }
 
@@ -153,7 +115,7 @@ public class Cleave : Skill
             hits[i].hit.SetHit(hit);
             hits[i].Renderer.flipY = flip;
             flip = !flip;
-            hits[i].HitTime.SetHitAnimationTime(skillCooldown / 2);
+            //hits[i].HitTime.SetHitAnimationTime(skillCooldown / 2);
             hits[i].hit.SetActiveHit(true);
         }
         return hits;

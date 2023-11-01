@@ -1,6 +1,7 @@
 using Statuses;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class Puncture : Skill
@@ -23,9 +24,9 @@ public class Puncture : Skill
     //private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
     private CombinedStat areaOfEffectModifier = new CombinedStat(1, 0, new List<float>());
     private CombinedStat bleedingChanceModifier = new CombinedStat(100, 0, new List<float>());
-    private CombinedStat bleedingDamageModifier = new CombinedStat(2, 0, new List<float>());
-    private CombinedStat bleedingDurationModifier = new CombinedStat(8, 0, new List<float>());
-    private float baseSkillCooldown = 2;
+    private CombinedStat bleedingDamageModifier = new CombinedStat(4, 0, new List<float>());
+    private CombinedStat bleedingDurationModifier = new CombinedStat(4, 0, new List<float>());
+    private float baseSkillCooldown = 1;
     private float multistrikeChance = 0;
     //Ailments section
 
@@ -46,10 +47,10 @@ public class Puncture : Skill
         selfTransform = gameObject.transform;
         skillCooldown = resultSkillCooldown;
         cooldown = 0;
-        damageModifier = new CombinedStat(4, 0, new List<float>());
-        attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
+        damageModifier = new CombinedStat(100, 0, new List<float>());
+        criticalStrikeChanceModifier.AddBaseValue(5);
         //Init methods
-        hitTags = new List<StatTag>() { StatTag.AttackDamage, StatTag.PhysicalDamage, StatTag.BleedingDamage};
+        hitTags = new List<StatTag>() { StatTag.AttackDamage, StatTag.PhysicalDamage };
         updateHitPool();
         updateAreaOfEffectPool(1);
         updateAttackSpeedPool(1);
@@ -93,45 +94,22 @@ public class Puncture : Skill
 
     protected override HitData getHitData()
     {
-        #region StatsMethod
-        HitData hit = new HitData(owner);
-        hit.Ally = owner.Ally;
-        CombinedModStat modStat = new CombinedModStat();
-        modStat.AddIncreaseValue(owner.Stats.GetAdvancedStat(StatTag.damage).IncreaseValue);
-        modStat.AddMoreValue(owner.Stats.GetAdvancedStat(StatTag.damage).MoreValue);
+        HitData hit = base.getHitData();
 
-        foreach (StatTag tag in hitTags)
+        //Puncture exclusive
+        int garantedStacks = (int)((bleedingChanceModifier.Value) / 100);
+        int stacksCount = garantedStacks;
+        if (Random.Range(1, 100f) <= (bleedingChanceModifier.Value - garantedStacks * 100))
+            stacksCount++;
+
+        for (int i = 0; i < stacksCount; i++)
         {
-            modStat.AddIncreaseValue(owner.Stats.GetAdvancedStat(tag).IncreaseValue);
-            modStat.AddMoreValue(owner.Stats.GetAdvancedStat(tag).MoreValues);
+            float bleedingDamageValue = bleedingDamageModifier.ValueWithAddedModParams(owner.Stats.GetAdvancedStat(StatTag.BleedingDamage));
+            Status status = new Status(StatusType.Bleeding, bleedingDurationModifier.ValueWithAddedModParams(owner.Stats.GetAdvancedStat(StatTag.BleedingDuration)), (int)bleedingDamageValue); //sender исправить, int преобразование
+            status.damage = bleedingDamageValue;
+            hit.InflicktedStatuses.Add(status);
         }
 
-        hit.PhysicalDamage = owner.Stats.GetAdvancedStat(StatTag.PhysicalDamage).ValueWithAddedParams(modStat.Value) * damageMultiplier;//Переписать
-        hit.FireDamage = owner.Stats.GetAdvancedStat(StatTag.FireDamage).ValueWithAddedParams(modStat.Value) * damageMultiplier;//Переписать
-        hit.ColdDamage = owner.Stats.GetAdvancedStat(StatTag.ColdDamage).ValueWithAddedParams(modStat.Value) * damageMultiplier;//Переписать
-        hit.LightningDamage = owner.Stats.GetAdvancedStat(StatTag.LightningDamage).ValueWithAddedParams(modStat.Value) * damageMultiplier;//Переписать
-        hit.CriticalStrikeChance = owner.Stats.GetAdvancedStat(StatTag.CriticalStrikeChance).ValueWithAddedParams(criticalStrikeChanceModifier); //Переписать
-        hit.CriticalStrikeMultiplier = owner.Stats.GetAdvancedStat(StatTag.CriticalStrikeMultiplier).Value;
-
-            int garantedStacks = (int)((bleedingChanceModifier.Value + owner.Stats.GetAdvancedStat(StatTag.BleedingChance).Value) / 100);
-            int stacksCount = garantedStacks;
-            if (Random.Range(1, 100f) <= (bleedingChanceModifier.Value + owner.Stats.GetAdvancedStat(StatTag.BleedingChance).Value - garantedStacks * 100))
-                stacksCount++;
-
-            for (int i = 0; i < stacksCount; i++)
-            {
-                //Bleeding
-                CombinedStat bleedingDamageMod = new CombinedStat();
-                bleedingDamageMod.AddIncreaseValue(owner.Stats.GetAdvancedStat(StatTag.BleedingDamage).IncreaseValue);
-                bleedingDamageMod.AddMoreValue(owner.Stats.GetAdvancedStat(StatTag.BleedingDamage).MoreValue); //Переписать
-                float bleedingDamageValue = bleedingDamageModifier.ValueWithAddedParams(bleedingDamageMod);
-                Status status = new Status(StatusType.Bleeding, owner.Stats.GetAdvancedStat(StatTag.BleedingDuration).Value, (int)bleedingDamageValue); //sender исправить, int преобразование
-                status.damage = bleedingDamageValue;
-                hit.InflicktedStatuses.Add(owner.Stats.GetStatus(StatusType.Bleeding)); //Ограничить по шансу и статусу
-            }
-        #endregion
-
-        hit.Tags = skillTags;
         return hit;
     }
 

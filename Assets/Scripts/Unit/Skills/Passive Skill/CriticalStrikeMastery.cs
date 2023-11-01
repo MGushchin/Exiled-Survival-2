@@ -8,8 +8,7 @@ public class CriticalStrikeMastery : Skill
     //Utility
 
     //Skill params
-    private CombinedStat criticalStrikeChance = new CombinedStat(0, 0, new List<float>());
-    private CombinedStat criticalStrikeMultiplier = new CombinedStat(0, 0, new List<float>());
+    private List<Affix> affixes = new List<Affix>();
 
     public override void InitSKill(UnitActions skillOwner)
     {
@@ -39,26 +38,18 @@ public class CriticalStrikeMastery : Skill
 
     public override void ApplyUpgrade(SkillMod mod)
     {
+        Debug.Log("ApplyUpgrade " + mod.name);
+        foreach (Affix affix in mod.Affixes)
+        {
+            Debug.Log("Affix " + affix.Tag + " " + affix.ModType + " " + affix.Value);
+            affixes.Add(affix);
+            owner.Stats.AddStat(affix.Tag, affix.ModType, affix.Value);
+        }
         switch (mod.name)
         {
-            case ("Critical Strike Mastery"):
+            default:
                 {
-                    criticalStrikeChance.AddIncreaseValue(20);
-                    owner.Stats.AddStat(StatTag.CriticalStrikeChance, StatModType.Increase, 20);
-                    criticalStrikeMultiplier.AddBaseValue(20);
-                    owner.Stats.AddStat(StatTag.CriticalStrikeMultiplier, StatModType.Base, 20);
-                }
-                break;
-            case ("Increased Critical Strike Chance"):
-                {
-                    criticalStrikeChance.AddIncreaseValue(40);
-                    owner.Stats.AddStat(StatTag.CriticalStrikeChance, StatModType.Increase, 40);
-                }
-                break;
-            case ("Increased Critical Strike Multiplier"):
-                {
-                    criticalStrikeMultiplier.AddBaseValue(20);
-                    owner.Stats.AddStat(StatTag.CriticalStrikeMultiplier, StatModType.Base, 20);
+                    
                 }
                 break;
 

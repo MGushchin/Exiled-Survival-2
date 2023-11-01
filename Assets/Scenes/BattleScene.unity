@@ -4301,20 +4301,51 @@ MonoBehaviour:
     enabled: 1
     BaseMod: {fileID: 11400000, guid: 6b37abe02be3219489873c830314ac0c, type: 2}
     SkillMods:
-    - {fileID: 11400000, guid: 8df546ac16c2d16478e0fd5da03c8b50, type: 2}
-    - {fileID: 11400000, guid: cb7f679b21ff9d346892f55b8f0af605, type: 2}
-    - {fileID: 11400000, guid: d1e19dfdccbf0714882670990532a3d0, type: 2}
-    - {fileID: 11400000, guid: 4de1f996902683c47baee21ca9e99b52, type: 2}
-    - {fileID: 11400000, guid: dcc888ad149a795408eebfe1eb45b7f8, type: 2}
-    - {fileID: 11400000, guid: ff9b22499575b1545ab77ff5d179c4d5, type: 2}
-    - {fileID: 11400000, guid: 75af57a2cc4f8944dae756dc04840742, type: 2}
-    - {fileID: 11400000, guid: c7da5e1d1baf7dd48aea66130efdf93e, type: 2}
-    - {fileID: 11400000, guid: 9f7d4164b9111d2429ceca8ddf1d4667, type: 2}
-    - {fileID: 11400000, guid: 6023afe5d20d72a408010dff2059c8f5, type: 2}
-    - {fileID: 11400000, guid: 76e99500e4d7f92489bae2ea9008cf04, type: 2}
-    - {fileID: 11400000, guid: 49e468c4b7703e644b8b4a608d385599, type: 2}
-    - {fileID: 11400000, guid: bbbcd456b7df421429c62eeca8cc644a, type: 2}
+    - {fileID: 11400000, guid: 4dfb4bb0902bee946864557363e8c221, type: 2}
+    - {fileID: 11400000, guid: edea921c9f5aa1f4393b0eacfaf194fd, type: 2}
+    - {fileID: 11400000, guid: 1836506ccc9d8b44a91cd82ec38a2662, type: 2}
+    - {fileID: 11400000, guid: 142cff701ef3fd14184d55da7b13402e, type: 2}
     SkillPrefab: {fileID: 8231105027022311255, guid: 68b72a9a555cf9948878987e6cd32af5, type: 3}
+  - skillName: Attack Mastery
+    enabled: 1
+    BaseMod: {fileID: 11400000, guid: 61b1fdad5b935c144868ceba119d77fa, type: 2}
+    SkillMods:
+    - {fileID: 11400000, guid: d73223b0615526b41a59f6447210de41, type: 2}
+    - {fileID: 11400000, guid: ebd9fd181047627489251fcb00b4f361, type: 2}
+    - {fileID: 11400000, guid: 967cfa5a35c382c4d96151d5c9e826b6, type: 2}
+    SkillPrefab: {fileID: 6131221436322229787, guid: 5248cb92f9b4ae34481198b34d2aa103, type: 3}
+  - skillName: Critical Strike Mastery
+    enabled: 1
+    BaseMod: {fileID: 11400000, guid: e288e37972e9f96439f8302c4e01dda1, type: 2}
+    SkillMods:
+    - {fileID: 11400000, guid: a3805d5c007eba541853de6d2f49cfa6, type: 2}
+    - {fileID: 11400000, guid: 03e8d04ce2da14d489d1482a10269661, type: 2}
+    SkillPrefab: {fileID: 2434248391346370813, guid: 1ce16929154cbd4448cb6a7309632d8a, type: 3}
+  - skillName: Life Mastery
+    enabled: 1
+    BaseMod: {fileID: 11400000, guid: 0665b50d0cf5f2c49922695b59fcfbed, type: 2}
+    SkillMods:
+    - {fileID: 11400000, guid: a626eed8f011d5a448e82d5cadda2f69, type: 2}
+    - {fileID: 11400000, guid: b60b2d06115ab434d8b4ba19b0b992aa, type: 2}
+    - {fileID: 11400000, guid: 675fc770dd82a1b4a91d2f2658fe789f, type: 2}
+    SkillPrefab: {fileID: 2267567570404163844, guid: c549dd483f15b6e44895453eafba2da7, type: 3}
+  - skillName: Projectile Mastery
+    enabled: 0
+    BaseMod: {fileID: 11400000, guid: d146c00e848214c40a872ae27c10edc7, type: 2}
+    SkillMods:
+    - {fileID: 11400000, guid: 32f8550c7d0c8af43a32e2e7b71cba87, type: 2}
+    - {fileID: 11400000, guid: b867f383a79087b4fb2980c26d196420, type: 2}
+    SkillPrefab: {fileID: 4012628368724633611, guid: fd0c6ffc45b6d8c4a9024841f207afe2, type: 3}
+  - skillName: Physical Damage Mastery
+    enabled: 1
+    BaseMod: {fileID: 11400000, guid: 24955598aee0deb4d8140281537aa856, type: 2}
+    SkillMods:
+    - {fileID: 11400000, guid: 5a4e1842b6bd9504c97b216fa3ad2662, type: 2}
+    - {fileID: 11400000, guid: b502ae7a781615e4ca1e48dc97d53bdc, type: 2}
+    - {fileID: 11400000, guid: 6ffde18db9960c041915dd579418eea0, type: 2}
+    - {fileID: 11400000, guid: c8e1fec234c810142ab23c2cc30cbbe5, type: 2}
+    - {fileID: 11400000, guid: 5949da32f5947f64dbb8d43883e5dbc6, type: 2}
+    SkillPrefab: {fileID: 5040947376148529857, guid: 5e4ac5672996bbe42a318434df472b03, type: 3}
   avaibleMods: []
   unavaibleMods: []
   WeightStorage: {fileID: 875304047}
@@ -7248,8 +7279,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefabs:
-  - {fileID: 2171073381158649073, guid: fc8733c7b1e3ec54c955a34d155b3b63, type: 3}
-  - {fileID: 6248157430294484021, guid: 7e28421e9915da041b569e1ea59ab3e3, type: 3}
+  - Prefab: {fileID: 2171073381158649073, guid: fc8733c7b1e3ec54c955a34d155b3b63, type: 3}
+    SpawnChanceRate: 1
+  - Prefab: {fileID: 6248157430294484021, guid: 7e28421e9915da041b569e1ea59ab3e3, type: 3}
+    SpawnChanceRate: 0.1
 --- !u!4 &1835668263
 Transform:
   m_ObjectHideFlags: 0

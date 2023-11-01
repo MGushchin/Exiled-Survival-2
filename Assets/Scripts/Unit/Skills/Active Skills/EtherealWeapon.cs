@@ -24,7 +24,7 @@ public class EtherealWeapon : Skill
     private CombinedStat projectileCountModifier = new CombinedStat(1, 0, new List<float>());
     private CombinedStat projectileSpeedModifier = new CombinedStat(0, 0, new List<float>());
     private float baseSkillCooldown = 1;
-    private float baseCriticalStrikeChance = 5;
+    //private float baseCriticalStrikeChance = 5;
     private CombinedStat chanceToPoison = new CombinedStat(0, 0, new List<float>());
     //Utility Params
     private float projectileLifeTime => 1 / projectileSpeedModifier.ModValue;
@@ -86,10 +86,10 @@ public class EtherealWeapon : Skill
         ////hit.InflicktedStatuses.Add(new Poison(new List<PoisonInstance> { new PoisonInstance(owner, 1, 2) })); //Debug
         //return hit;
         HitData hit = owner.Stats.GetHitData();
-        hit.PhysicalDamage = damageModifier.ValueWithAddedParams(hit.PhysicalDamage);
-        hit.FireDamage *= damageModifier.ModValue;
-        hit.ColdDamage *= damageModifier.ModValue;
-        hit.LightningDamage *= damageModifier.ModValue;
+        //hit.PhysicalDamage = damageModifier.ValueWithAddedParams(hit.PhysicalDamage);
+        //hit.FireDamage *= damageModifier.ModValue;
+        //hit.ColdDamage *= damageModifier.ModValue;
+        //hit.LightningDamage *= damageModifier.ModValue;
         return hit;
     }
 

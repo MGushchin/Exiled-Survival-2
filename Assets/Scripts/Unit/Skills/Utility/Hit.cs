@@ -10,21 +10,17 @@ public class HitData
     public HitData(UnitActions hitSender)
     {
         HitSender = hitSender;
-        PhysicalDamage = 0;
+        Damage = new Dictionary<DamageType, CombinedStat>();
+        DamageDebug = new List<CombinedStat>();
         CriticalStrikeChance = 0;
         CriticalStrikeMultiplier = 0;
-        FireDamage = 0;
-        ColdDamage = 0;
-        LightningDamage = 0;
         Ally = false;
     }
     public UnitActions HitSender;
-    public float PhysicalDamage;
+    public Dictionary<DamageType, CombinedStat> Damage;
+    public List<CombinedStat> DamageDebug;
     public float CriticalStrikeChance; //Возможно переписать
     public float CriticalStrikeMultiplier;
-    public float FireDamage;
-    public float ColdDamage;
-    public float LightningDamage;
     public bool Ally;
     public List<Status> InflicktedStatuses = new List<Status>();
     public List<SkillTag> Tags = new List<SkillTag>();
@@ -63,6 +59,7 @@ public class Hit : MonoBehaviour
     public Collider2D HitCollider;
     public UnityEvent<HitFeedback> OnFeedbackReceived = new UnityEvent<HitFeedback>();
     public UnityEvent<Vector3> OnHit = new UnityEvent<Vector3>();
+    [SerializeField]
     protected HitData data;
 
     public virtual void SetActiveHit(bool value)

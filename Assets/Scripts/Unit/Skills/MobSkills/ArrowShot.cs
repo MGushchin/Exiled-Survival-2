@@ -45,6 +45,8 @@ public class ArrowShot : Skill
         dangerZoneRenderer = Instantiate(DangerZonePrefab, transform).GetComponent<VectorDangerZoneRenderer>();
         owner.Stats.OnStatChanged[StatTag.ProjectileCount].AddListener(updateProjectilesCount);
         hitTags = new List<StatTag> { StatTag.ProjectileDamage, StatTag.PhysicalDamage, StatTag.AttackDamage };
+        damageModifier = new CombinedStat(100, 0, new List<float>());
+        criticalStrikeChanceModifier.AddBaseValue(5);
     }
 
     public override bool UseSkill(Vector3 castPoint)

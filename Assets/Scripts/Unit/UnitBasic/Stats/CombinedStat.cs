@@ -20,7 +20,11 @@ public class CombinedStat
             float resultValue = 1;
             foreach (float value in moreValues)
             {
-                resultValue *= 1 + (value / 100);
+                //resultValue *= 1 + (value / 100);
+                if (value >= 0)
+                    resultValue *= 1 + (value / 100);
+                else
+                    resultValue *= ((100 - value) / 100);
             }
             return resultValue;
         }
@@ -64,9 +68,31 @@ public class CombinedStat
             this.moreValues.Add(more);
         recalculateValue();
     }
+
     public void InitValue()
     {
         recalculateValue();
+    }
+
+    public void AddStat(CombinedStat stat)
+    {
+        baseValue += stat.baseValue;
+        increaseValue += stat.increaseValue;
+        foreach (float more in stat.moreValues)
+        {
+            //if (value >= 0)
+                moreValues.Add(more);
+            //else
+            //    moreValues.Add((100 - more) / 100);
+        }
+        recalculateValue();
+    }
+
+    public void AddModValues(CombinedStat stat)
+    {
+        increaseValue += stat.increaseValue;
+        foreach (float more in stat.moreValues)
+            moreValues.Add(more);
     }
 
     public virtual void AddBaseValue(float value)
@@ -83,10 +109,11 @@ public class CombinedStat
 
     public void AddMoreValue(float value)
     {
-        if (value >= 0)
+        Debug.Log("more value " + value);
+        //if (value >= 0)
             moreValues.Add(value);
-        else
-            moreValues.Add((100 - value) / 100);
+        //else
+        //    moreValues.Add((100 - value) / 100);
         recalculateValue();
     }
 
@@ -94,10 +121,10 @@ public class CombinedStat
     {
         foreach (float value in values)
         {
-            if (value >= 0)
+            //if (value >= 0)
                 moreValues.Add(value);
-            else
-                moreValues.Add((100 - value) / 100);
+            //else
+            //    moreValues.Add((100 - value) / 100);
         }
         recalculateValue();
     }
@@ -116,8 +143,8 @@ public class CombinedStat
 
     public void RemoveMoreValue(float value)
     {
-        if (value < 0)
-            value = -(100 - (value * 100));
+        //if (value < 0)
+        //    value = -(100 - (value * 100));
         if (moreValues.Contains(value))
         {
             moreValues.Remove(value);
@@ -134,66 +161,175 @@ public class CombinedStat
         modValue = 1;
         foreach (float value in moreValues)
         {
-            modValue *= 1 + (value / 100);
+            //modValue *= 1 + (value / 100);
+
+            if (value >= 0)
+            {
+                if (value == 0)
+                    Debug.Log("value = 0 " + modValue);
+                modValue *= 1 + (value / 100);
+                Debug.Log("value = " + modValue);
+            }
+            else
+                modValue *= ((100 + value) / 100);
+
         }
-        modValue *= 1 + (IncreaseValue / 100);
+
+        float resultIncreaseValue = 1 + (IncreaseValue  / 100);
+
+        if (resultIncreaseValue < 0)
+            resultIncreaseValue = 0;
+
+        modValue *= resultIncreaseValue;
+
         value = baseValue * ModValue;
     }
 
-    public virtual float ValueWithAddedParams(float baseValue, float increaseValue, List<float> moreValues) //не учитывает отрицательные значения
+    public virtual float ValueWithAddedParams(float _baseValue, float _increaseValue, List<float> _moreValues)
     {
         //float newBaseValue = 1;
         float newModValue = 1;
         foreach (float value in this.moreValues)
         {
-            newModValue *= 1 + (value / 100);
+            //newModValue *= 1 + (value / 100);
+
+            if (value >= 0)
+                newModValue *= 1 + (value / 100);
+            else
+                newModValue *= ((100 + value) / 100);
         }
-        foreach (float value in moreValues)
+        foreach (float value in _moreValues)
         {
-            newModValue *= 1 + (value / 100);
+            //newModValue *= 1 + (value / 100);
+
+            if (value >= 0)
+                newModValue *= 1 + (value / 100);
+            else
+                newModValue *= ((100 + value) / 100);
         }
-        newModValue *= 1 + ((IncreaseValue + increaseValue) / 100);
-        return (this.baseValue + baseValue) * newModValue;
+
+        float resultIncreaseValue = 1 + ((IncreaseValue + _increaseValue) / 100);
+
+        if (resultIncreaseValue < 0)
+            resultIncreaseValue = 0;
+
+        newModValue *= resultIncreaseValue;
+
+        return (this.baseValue + _baseValue) * newModValue;
     }
 
-    public virtual float ValueWithAddedParams(float baseValue) //не учитывает отрицательные значения
+    public virtual float ValueWithAddedParams(float baseValue)
     {
         float newModValue = 1;
         foreach (float value in this.moreValues)
         {
-            newModValue *= 1 + (value / 100);
+            //newModValue *= 1 + (value / 100);
+
+            if (value >= 0)
+                newModValue *= 1 + (value / 100);
+            else
+                newModValue *= ((100 + value) / 100);
         }
-        newModValue *= 1 + (IncreaseValue / 100);
+
+        float resultIncreaseValue = 1 + ((IncreaseValue) / 100);
+
+        if (resultIncreaseValue < 0)
+            resultIncreaseValue = 0;
+
+        newModValue *= resultIncreaseValue;
+
         return (this.baseValue + baseValue) * newModValue;
     }
 
-    public virtual float ValueWithAddedParams(CombinedStat stat) //не учитывает отрицательные значения
+    public virtual float ValueWithAddedParams(CombinedStat stat) 
     {
         float newModValue = 1;
         foreach (float value in stat.MoreValues)
         {
-            newModValue *= 1 + (value / 100);
+            //newModValue *= 1 + (value / 100);
+
+            if (value >= 0)
+                newModValue *= 1 + (value / 100);
+            else
+                newModValue *= ((100 + value) / 100);
         }
         foreach (float value in moreValues)
         {
-            newModValue *= 1 + (value / 100);
+            //newModValue *= 1 + (value / 100);
+            if (value >= 0)
+                newModValue *= 1 + (value / 100);
+            else
+                newModValue *= ((100 + value) / 100);
         }
-        newModValue *= 1 + ((IncreaseValue + stat.IncreaseValue) / 100);
+
+        float resultIncreaseValue = 1 + ((IncreaseValue + stat.increaseValue) / 100);
+
+        if (resultIncreaseValue < 0)
+            resultIncreaseValue = 0;
+
+        newModValue *= resultIncreaseValue;
+
         return (baseValue + stat.BaseValue) * newModValue;
     }
+
+    public virtual float ValueWithAddedModParams(CombinedStat stat)
+    {
+        float newModValue = 1;
+        foreach (float value in stat.MoreValues)
+        {
+            //newModValue *= 1 + (value / 100);
+
+            if (value >= 0)
+                newModValue *= 1 + (value / 100);
+            else
+                newModValue *= ((100 + value) / 100);
+        }
+        foreach (float value in moreValues)
+        {
+            //newModValue *= 1 + (value / 100);
+            if (value >= 0)
+                newModValue *= 1 + (value / 100);
+            else
+                newModValue *= ((100 + value) / 100);
+        }
+
+        float resultIncreaseValue = 1 + ((IncreaseValue + stat.increaseValue) / 100);
+
+        if (resultIncreaseValue < 0)
+            resultIncreaseValue = 0;
+
+        newModValue *= resultIncreaseValue;
+
+        return baseValue * newModValue;
+    }
     //
-    public virtual float ModValueWithAddedParams(float baseValue, float increaseValue, List<float> moreValues) //не учитывает отрицательные значения
+    public virtual float ModValueWithAddedParams(float _baseValue, float _increaseValue, List<float> _moreValues)
     {
         float newModValue = 1;
         foreach (float value in this.moreValues)
         {
-            newModValue *= 1 + (value / 100);
+            //newModValue *= 1 + (value / 100);
+            if (value >= 0)
+                newModValue *= 1 + (value / 100);
+            else
+                newModValue *= ((100 - value) / 100);
         }
-        foreach (float value in moreValues)
+        foreach (float value in _moreValues)
         {
-            newModValue *= 1 + (value / 100);
+            //newModValue *= 1 + (value / 100);
+            if (value >= 0)
+                newModValue *= 1 + (value / 100);
+            else
+                newModValue *= ((100 - value) / 100);
         }
-        newModValue *= 1 + ((IncreaseValue + increaseValue) / 100);
+
+        float resultIncreaseValue = 1 + ((IncreaseValue + _increaseValue) / 100);
+
+        if (resultIncreaseValue < 0)
+            resultIncreaseValue = 0;
+
+        newModValue *= resultIncreaseValue;
+
         return 1 * newModValue;
     }
 
@@ -208,7 +344,14 @@ public class CombinedStat
         {
             newModValue *= 1 + (value / 100);
         }
-        newModValue *= 1 + ((IncreaseValue + stat.IncreaseValue) / 100);
+
+        float resultIncreaseValue = 1 + ((IncreaseValue + stat.IncreaseValue) / 100);
+
+        if (resultIncreaseValue < 0)
+            resultIncreaseValue = 0;
+
+        newModValue *= resultIncreaseValue;
+
         return 1 * newModValue;
     }
 }

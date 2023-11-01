@@ -25,10 +25,7 @@ namespace Statuses
         //Main section
         private StatusType type;
         public StatusType Type => type;
-        //private UnitActions inflicter;
-        //public UnitActions Inflicter => inflicter;
-        //private int maximumStacks;
-        //public int MaximumStacks => maximumStacks;
+
         private float duration;
         public float Duration => duration;
         [SerializeField]

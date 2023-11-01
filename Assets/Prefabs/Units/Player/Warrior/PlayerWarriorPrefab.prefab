@@ -291,11 +291,15 @@ MonoBehaviour:
     Increase: 0
     More: []
   - Tag: 5
-    Base: 10
+    Base: 1
     Increase: 0
     More: []
   - Tag: 1
-    Base: 1
+    Base: 0.1
+    Increase: 0
+    More: []
+  - Tag: 8
+    Base: 5
     Increase: 0
     More: []
   effects: []
@@ -593,7 +597,7 @@ MonoBehaviour:
   Storage: {fileID: 2213879652702211452}
   owner: {fileID: 8462152838018038397}
   SkillObjects:
-  - {fileID: 5749767015430846902}
+  - {fileID: 772736906817738654}
   - {fileID: 4746292270672750400}
   autoCastIndexes: 
 --- !u!114 &2213879652702211452
@@ -943,6 +947,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20b70b276a9a8574ca491824e00567be, type: 3}
+--- !u!1 &772736906817738654 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4042905635422934734, guid: 20b70b276a9a8574ca491824e00567be, type: 3}
+  m_PrefabInstance: {fileID: 3648506540454543696}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5675946618042520051 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8964162438454481059, guid: 20b70b276a9a8574ca491824e00567be, type: 3}
@@ -1008,11 +1017,6 @@ PrefabInstance:
 --- !u!4 &5673805682196341886 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3261084944725862527, guid: b86741bd0f84d5a42a810d95692c5c34, type: 3}
-  m_PrefabInstance: {fileID: 7204874633066417153}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &5749767015430846902 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3186188904015787447, guid: b86741bd0f84d5a42a810d95692c5c34, type: 3}
   m_PrefabInstance: {fileID: 7204874633066417153}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7959638536701073569

@@ -118,7 +118,7 @@ MonoBehaviour:
     Base: 10
     Increase: 0
     More: []
-  - Tag: 3
+  - Tag: 8
     Base: 1
     Increase: 0
     More: []
@@ -168,7 +168,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnStatusUpdate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6655265144548257617}
+        m_TargetAssemblyTypeName: StatusDisplay, Assembly-CSharp
+        m_MethodName: UpdateIcons
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   poisonStatus: []
   divineAuraStatus: []
 --- !u!114 &2801905542799639296
@@ -713,6 +725,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4a409110b2d603a448b0105b995a9faf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6655265144548257617 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6315276637930100274, guid: 46e39661e8f04c44ebf21c1f36f85db3, type: 3}
+  m_PrefabInstance: {fileID: 862473169711397219}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4345b3d07576aba44ac132cb9b0e9f51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &7850952614276308177 stripped

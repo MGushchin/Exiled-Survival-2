@@ -38,6 +38,7 @@ public class Skill : MonoBehaviour
     //Ailments section
 
     //Utility Params
+    
     #endregion
 
     #region UtilityLinks
@@ -80,31 +81,34 @@ public class Skill : MonoBehaviour
 
     public virtual void ApplyUpgrade(SkillMod mod)
     {
-        baseSkillMod.UpgradeLevel();
+        
     }
 
     protected virtual HitData getHitData() //Под рефакторинг
     {
-        //HitData hit = owner.Stats.GetHitData(hitTags);
-
         #region StatsMethod
+        Debug.Log("Getted hit data");
         HitData hit = new HitData(owner);
         hit.Ally = owner.Ally;
-        CombinedModStat modStat = new CombinedModStat();
-        modStat.AddIncreaseValue(owner.Stats.GetAdvancedStat(StatTag.damage).IncreaseValue);
-        modStat.AddMoreValue(owner.Stats.GetAdvancedStat(StatTag.damage).MoreValue);
+
+        hit.Damage = owner.Stats.GetDamageData();
+
+        foreach (CombinedStat damageType in hit.Damage.Values)
+        {
+            Debug.Log("Damage 0 " + damageType.Value);
+        }
 
         foreach (StatTag tag in hitTags)
-        {
-            modStat.AddIncreaseValue(owner.Stats.GetAdvancedStat(tag).IncreaseValue);
-            modStat.AddMoreValue(owner.Stats.GetAdvancedStat(tag).MoreValues);
-        }
-        hit.PhysicalDamage = owner.Stats.GetAdvancedStat(StatTag.PhysicalDamage).ValueWithAddedParams(modStat.Value) * damageModifier.ModValue;//Переписать
-        hit.FireDamage = owner.Stats.GetAdvancedStat(StatTag.FireDamage).ValueWithAddedParams(modStat.Value) * damageModifier.ModValue;//Переписать
-        hit.ColdDamage = owner.Stats.GetAdvancedStat(StatTag.ColdDamage).ValueWithAddedParams(modStat.Value) * damageModifier.ModValue;//Переписать
-        hit.LightningDamage = owner.Stats.GetAdvancedStat(StatTag.LightningDamage).ValueWithAddedParams(modStat.Value) * damageModifier.ModValue;//Переписать
+            foreach (CombinedStat damageType in hit.Damage.Values)
+            {
+                Debug.Log("Damage 1 " + tag + " "+ damageType.Value);
+                damageType.ValueWithAddedModParams(owner.Stats.GetAdvancedStat(tag));
+                Debug.Log("Damage 2 " + tag + " " + damageType.Value);
+            }
+
         hit.CriticalStrikeChance = owner.Stats.GetAdvancedStat(StatTag.CriticalStrikeChance).ValueWithAddedParams(criticalStrikeChanceModifier); //Переписать
-        hit.CriticalStrikeMultiplier = owner.Stats.GetAdvancedStat(StatTag.CriticalStrikeMultiplier).Value;
+        hit.CriticalStrikeMultiplier = criticalStrikeMultiplierModifier.ValueWithAddedParams(owner.Stats.GetAdvancedStat(StatTag.CriticalStrikeMultiplier));
+
         if (hitTags.Contains(StatTag.PhysicalDamage) && owner.Stats.GetAdvancedStat(StatTag.BleedingChance).Value > 0) //Переписать
         {
             int garantedStacks = (int)(owner.Stats.GetAdvancedStat(StatTag.BleedingChance).Value / 100);
@@ -118,15 +122,26 @@ public class Skill : MonoBehaviour
                 hit.InflicktedStatuses.Add(owner.Stats.GetStatus(StatusType.Bleeding)); //Ограничить по шансу и статусу
             }
         }
+
+        foreach (CombinedStat damageType in hit.Damage.Values)
+        {
+            Debug.Log("DamageModifierValue " + damageModifier.Value + " = " + (damageModifier.Value - 100));
+            damageType.AddMoreValue(damageModifier.Value - 100);
+            Debug.Log("Damage i " + damageType.Value);
+        }
+
+        foreach (Status status in hit.InflicktedStatuses)
+        {
+            status.damage *= damageModifier.Value / 100;
+        }
+
+        foreach(CombinedStat damage in hit.Damage.Values)
+        {
+            hit.DamageDebug.Add(damage);
+        }
         #endregion
 
         hit.Tags = skillTags;
-        //float criticalStrikeChance = owner.Stats.GetAdvancedStat(StatTag.CriticalStrikeChance).ValueWithAddedParams(criticalStrikeChanceModifier);
-        //hit.CriticalStrikeChance = criticalStrikeChance; // Переписать
-        //hit.PhysicalDamage *= damageModifier.ModValue;
-        //hit.FireDamage *= damageModifier.ModValue;
-        //hit.ColdDamage *= damageModifier.ModValue;
-        //hit.LightningDamage *= damageModifier.ModValue;
         return hit;
     }
 

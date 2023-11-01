@@ -171,7 +171,7 @@ public class AbstractFactory: MonoBehaviour
         startingStats.Add(new SetterStatData { Tag = StatTag.life, Base = life, Increase = 0, More = new List<float>() });
         startingStats.Add(new SetterStatData { Tag = StatTag.PhysicalDamage, Base = damage, Increase = 0, More = new List<float>() });
         startingStats.Add(new SetterStatData { Tag = StatTag.Armour, Base = armour, Increase = 0, More = new List<float>() });
-        startingStats.Add(new SetterStatData { Tag = StatTag.AttackRange, Base = magicUnitsSizeMult * 0.75f, Increase = 0, More = new List<float>() });
+        //startingStats.Add(new SetterStatData { Tag = StatTag.AttackRange, Base = magicUnitsSizeMult * 0.75f, Increase = 0, More = new List<float>() });
         unit.Stats.SetStats(startingStats);
         unit.Experience.SetLevel(GlobalData.instance.LevelData.MonsterLevel);
         //Name
@@ -198,7 +198,7 @@ public class AbstractFactory: MonoBehaviour
         startingStats.Add(new SetterStatData { Tag = StatTag.life, Base = life, Increase = 0, More = new List<float>() });
         startingStats.Add(new SetterStatData { Tag = StatTag.PhysicalDamage, Base = damage, Increase = 0, More = new List<float>() });
         startingStats.Add(new SetterStatData { Tag = StatTag.Armour, Base = armour, Increase = 0, More = new List<float>() });
-        startingStats.Add(new SetterStatData { Tag = StatTag.AttackRange, Base = rareUnitsSizeMult * 0.75f, Increase = 0, More = new List<float>() });
+        //startingStats.Add(new SetterStatData { Tag = StatTag.AttackRange, Base = rareUnitsSizeMult * 0.75f, Increase = 0, More = new List<float>() });
         unit.Stats.SetStats(startingStats);
         unit.Experience.SetLevel(GlobalData.instance.LevelData.MonsterLevel);
         //Name

@@ -18,10 +18,10 @@ public class Cyclone : Skill
     private IEnumerator cooldownCoroutine;
 
     #region SkillParams
-    private CombinedStat damageModifier = new CombinedStat(0, 0, new List<float>() {  0.25f });
-    private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float> { 4 });
+    //private CombinedStat damageModifier = new CombinedStat(0, 0, new List<float>() {  0.25f });
+    //private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float> { 4 });
     private float baseSkillCooldown = 1;
-    private float baseCriticalStrikeChance = 5;
+    //private float baseCriticalStrikeChance = 5;
     //private float movementSpeedSlow = -40;
     private CombinedStat areaOfEffectModifier = new CombinedStat(1, 0, new List<float>());
     //Ailments section
@@ -71,7 +71,7 @@ public class Cyclone : Skill
     {
         Debug.LogError("Not refactored code");
         HitData hit = owner.Stats.GetHitData();
-        hit.PhysicalDamage *= damageModifier.ModValue;
+        //hit.PhysicalDamage *= damageModifier.ModValue;
         return hit;
     }
 

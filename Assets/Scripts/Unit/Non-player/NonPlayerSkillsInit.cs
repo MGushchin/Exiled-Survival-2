@@ -16,6 +16,7 @@ public class NonPlayerSkillsInit : MonoBehaviour
         foreach (GameObject skillObject in Owner.SkillsActivation.SkillObjects) 
         {
             Skill skill = skillObject.GetComponent<Skill>();
+            skill.InitSKill(Owner);
             Owner.SkillsActivation.Storage.AddSkill(skill);
         }
     }

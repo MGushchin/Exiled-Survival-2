@@ -15,7 +15,7 @@ public class DefaultMeleeAttackSkill : Skill
     //Skill params
     //private float skillCooldown = 1;
     private float baseSkillCooldown = 1;
-    private float baseCriticalStrikeChance = 5;
+    //private float baseCriticalStrikeChance = 5;
 
     #region UtilityLinks
     private float resultCooldownRecoverySpeed => (1 / owner.Stats.GetAdvancedStat(StatTag.CooldownRecovery).Value);
@@ -36,6 +36,8 @@ public class DefaultMeleeAttackSkill : Skill
         cooldown = 0;
         skillCooldown = resultSkillCooldown;
         timeSetter.SetHitAnimationTime(skillCooldown / 10);
+        damageModifier = new CombinedStat(100, 0, new List<float>());
+        criticalStrikeChanceModifier.AddBaseValue(5);
     }
 
     public override bool UseSkill(Vector3 castPoint)
@@ -45,6 +47,8 @@ public class DefaultMeleeAttackSkill : Skill
         {
             timeSetter.SetHitAnimationTime(skillCooldown / 10);
             attackHit.SetHit(getHitData());
+            foreach (CombinedStat damage in getHitData().Damage.Values)
+                Debug.Log(damage);
             //AttackHit.SelfTransform.position = AttackHit.SelfTransform.position + (castPoint - selfTransform.position); //Ограничить по attackRange
             Vector3 castPosition = Vector3.ClampMagnitude(Vector3.Normalize(castPoint - selfTransform.position), attackRange);
             attackHit.SelfTransform.position = selfTransform.position + castPosition;

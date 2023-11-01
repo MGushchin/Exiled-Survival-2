@@ -8,8 +8,7 @@ public class ProjectileMastery : Skill
     //Utility
 
     //Skill params
-    private CombinedModStat projectileDamageMod = new CombinedModStat(0, 0, new List<float>());
-    private int pierceCount = 0;
+    private List<Affix> affixes = new List<Affix>();
 
     public override void InitSKill(UnitActions skillOwner)
     {
@@ -39,24 +38,18 @@ public class ProjectileMastery : Skill
 
     public override void ApplyUpgrade(SkillMod mod)
     {
+        Debug.Log("ApplyUpgrade " + mod.name);
+        foreach (Affix affix in mod.Affixes)
+        {
+            Debug.Log("Affix " + affix.Tag + " " + affix.ModType + " " + affix.Value);
+            affixes.Add(affix);
+            owner.Stats.AddStat(affix.Tag, affix.ModType, affix.Value);
+        }
         switch (mod.name)
         {
-            case ("Projectile Mastery"):
+            default:
                 {
-                    projectileDamageMod.AddIncreaseValue(20);
-                    owner.Stats.AddStat(StatTag.ProjectileDamage, StatModType.Increase, 20);
-                }
-                break;
-            case ("Increased Projectile Damage"):
-                {
-                    projectileDamageMod.AddIncreaseValue(10);
-                    owner.Stats.AddStat(StatTag.ProjectileDamage, StatModType.Increase, 10);
-                }
-                break;
-            case ("Projectile Pierce"):
-                {
-                    pierceCount++;
-                    owner.Stats.AddStat(StatTag.Pierce, StatModType.Base, 1);
+                    
                 }
                 break;
         }

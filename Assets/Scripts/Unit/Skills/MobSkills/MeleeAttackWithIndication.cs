@@ -18,7 +18,7 @@ public class MeleeAttackWithIndication : Skill
     //Skill params
     //private float skillCooldown = 1;
     private float baseSkillCooldown = 1;
-    private float baseCriticalStrikeChance = 5;
+    //private float baseCriticalStrikeChance = 5;
 
     #region UtilityLinks
     private float resultCooldownRecoverySpeed => (1 / owner.Stats.GetAdvancedStat(StatTag.CooldownRecovery).Value);
@@ -41,6 +41,8 @@ public class MeleeAttackWithIndication : Skill
         cooldown = 0;
         skillCooldown = resultSkillCooldown;
         timeSetter.SetHitAnimationTime(skillCooldown / 10);
+        damageModifier = new CombinedStat(100, 0, new List<float>());
+        criticalStrikeChanceModifier.AddBaseValue(5);
     }
 
     public override bool UseSkill(Vector3 castPoint)

@@ -142,7 +142,7 @@ public class SurvivalScenario : MonoBehaviour
 
     private IEnumerator rareTimer()
     {
-        float timer = bossSpawnTime;
+        float timer = rareMobSpawnTime;
 
         while (active)
         {

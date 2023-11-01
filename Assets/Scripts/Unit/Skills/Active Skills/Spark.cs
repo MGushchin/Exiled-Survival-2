@@ -17,12 +17,12 @@ public class Spark : Skill
     private Queue<projectile> projectilesPool = new Queue<projectile>();
     private IEnumerator cooldownCoroutine;
     //Skill Params
-    private CombinedStat damageModifier = new CombinedStat(0, 0, new List<float>());
-    private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
+    //private CombinedStat damageModifier = new CombinedStat(0, 0, new List<float>());
+    //private CombinedStat attackSpeedModifier = new CombinedStat(0, 0, new List<float>());
     private CombinedStat projectileCountModifier = new CombinedStat(3, 0, new List<float>());
-    private CombinedStat projectileSpeedModifier = new CombinedStat(1.5f, 0, new List<float>());
+    //private CombinedStat projectileSpeedModifier = new CombinedStat(1.5f, 0, new List<float>());
     private float baseSkillCooldown = 1;
-    private float baseCriticalStrikeChance = 5;
+    //private float baseCriticalStrikeChance = 5;
     //Utility Params
     private float projectileLifeTime => 3;
     private int pierceCount = 0;
@@ -78,7 +78,7 @@ public class Spark : Skill
     {
         Debug.LogError("Not refactored code");
         HitData hit = owner.Stats.GetHitData();
-        hit.PhysicalDamage *= damageModifier.ModValue; //Переписать бы
+        //hit.PhysicalDamage *= damageModifier.ModValue; //Переписать бы
         //hit.FireDamage *= damageModifier.ModValue; //Переписать бы
         //hit.ColdDamage *= damageModifier.ModValue; //Переписать бы
         //hit.LightningDamage *= damageModifier.ModValue; //Переписать бы
